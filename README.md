@@ -1,5 +1,5 @@
 # Destined-2022
-
+---
 ----- Current goals: -----
 
 * Functioning combat system:
@@ -11,7 +11,7 @@
   * Enemy actions and simple Ai,
 
 
-
+---
 ----- Commit layout: -----
 
 Changed systems:    (+ number of commits with said systems)
