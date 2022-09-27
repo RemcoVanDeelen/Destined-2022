@@ -1,13 +1,14 @@
 # Destined-2022
 
 ----- Current goals: -----
- = Functioning combat system:
-   - Spells (independant cooldown, unique effect),
-   - Items (Type shared cooldown, simple effect),
-   - Weaponry (Affecting speed, damage, etc.)
-   - Actions (Mostly harmless ways to pacify enemies),
+
+* Functioning combat system:
+  * Spells (independant cooldown, unique effect),
+  * Items (Type shared cooldown, simple effect),
+  * Weaponry (Affecting speed, damage, etc.)
+  * Actions (Mostly harmless ways to pacify enemies),
    
-   - Enemy actions and simple ai,
+  * Enemy actions and simple Ai,
 
 
 
