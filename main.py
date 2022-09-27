@@ -18,7 +18,7 @@ win.bind("<w>", Player1.move)
 win.bind("<d>", Player1.move)
 win.bind("<s>", Player1.move)
 win.bind("<a>", Player1.move)
-win.bind("<t>", Player1.interact)
+win.bind("<r>", Player1.interact)
 
 win.bind("<Escape>", exit)
 win.mainloop()
