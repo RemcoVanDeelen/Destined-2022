@@ -31,45 +31,97 @@ img_fight_button = PhotoImage(file="ButtonTest-Fight.png").zoom(6, 6)
 img_magic_button = PhotoImage(file="ButtonTest-Magic.png").zoom(6, 6)
 img_bag_button = PhotoImage(file="ButtonTest-Bag.png").zoom(6, 6)
 img_action_button = PhotoImage(file="ButtonTest-Action.png").zoom(6, 6)
+img_return_button = PhotoImage(file="ReturnButtonTest.png").zoom(3, 3)
 
 img_heavy_attack_button = PhotoImage(file="ButtonTest-Heavy_atk.png").zoom(6, 6)
 img_light_attack_button = PhotoImage(file="ButtonTest-Light_atk.png").zoom(6, 6)
 
-"""
 
-'''
-battle_frame = Frame(scr, width=scr.winfo_screenwidth() - 30, height=scr.winfo_screenheight() // 4 + 50)
-battle_frame.place(x=15, y=1080 // 4 * 3 - 75)
+img_battle_frame = PhotoImage(file="BattleMenuTest.png").zoom(5, 5)
+img_text_label_frame = PhotoImage(file="TextLabelTest.png").zoom(5, 5)
 
-text_frame = Frame(scr, width=scr.winfo_screenwidth() - 30, height=100, bg="#00FF00")
-text_frame.place(x=15, y=1080 // 2 + 95)
-'''  # background: (in lack of proper image, simple frames are placed. TestImage should come soon)
+global placed_buttons
+placed_buttons = []
 
-'''
-fight_button = Button(scr, image=img_fight_button, borderwidth=0, highlightthickness=0)
-magic_button = Button(scr, image=img_magic_button, borderwidth=0, highlightthickness=0)
-bag_button = Button(scr, image=img_bag_button, borderwidth=0, highlightthickness=0)
-action_button = Button(scr, image=img_action_button, borderwidth=0, highlightthickness=0)
 
-fight_button.place(x=1920 / 5 - 48 * 3, y=845)
-magic_button.place(x=1920 / 5 * 2 - 48 * 3, y=845)
-bag_button.place(x=1920 / 5 * 3 - 48 * 3, y=845)
-action_button.place(x=1920 / 5 * 4 - 48 * 3, y=845)
-'''  # = Main button creation and placement =
+def place_bg():
+    scr.create_image(15+1890/2, 1080 // 4 * 3 + 80, image=img_battle_frame)
+    scr.create_image(15+1890/2, 1080 // 4 * 3 - 130, image=img_text_label_frame)
 
-'''
-light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0)
-heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0)
 
-light_attack_button.place(x=1920 / 3 - 48 * 3, y=845)
-heavy_attack_button.place(x=1920 / 3 * 2 - 48 * 3, y=845)
-'''  # = Attack button creation and placement =
+def place_attack():
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = [light_attack_button, heavy_attack_button]
 
-'''
+    light_attack_button.place(x=1920 / 3 - 48 * 3, y=845)
+    heavy_attack_button.place(x=1920 / 3 * 2 - 48 * 3, y=845)
+
+
+def place_spells():
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = []
+
+    for spell in test.spells:
+        button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=spell.function)
+        button.place(x=1920/(len(test.spells)+1)*(test.spells.index(spell)+1)-48*3, y=845)
+
+        placed_buttons.append(button)
+
+
+def place_bag():
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = []
+
+    temp_x = 0
+    temp_y = 1
+    for item in test.inventory:
+        button = Button(scr, image=item.image, borderwidth=0, highlightthickness=0,
+                        activebackground="#000000", command=item.function)
+
+        temp_y += 1
+        if test.inventory.index(item) % 3 == 0:
+            temp_x += 1
+            temp_y = 1
+        button.place(x=temp_x * 77 * 6 - 72 * 6, y=temp_y * 16 * 6 - 16 * 6 + 745)
+        placed_buttons.append(button)
+
+
+def place_main():
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = [fight_button, magic_button, bag_button, action_button]
+    fight_button.place(x=1920 / 5 - 48 * 3, y=845)
+    magic_button.place(x=1920 / 5 * 2 - 48 * 3, y=845)
+    bag_button.place(x=1920 / 5 * 3 - 48 * 3, y=845)
+    action_button.place(x=1920 / 5 * 4 - 48 * 3, y=845)
+
+
+# = Main button creation and placement =
+fight_button = Button(scr, image=img_fight_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_attack)
+magic_button = Button(scr, image=img_magic_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_spells)
+bag_button = Button(scr, image=img_bag_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_bag)
+action_button = Button(scr, image=img_action_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
+
+return_button = Button(scr, image=img_return_button, borderwidth=0, highlightthickness=0, activebackground="#555555", bg="#555555", command=place_main)
+return_button.place(x=50, y=760)
+
+# = Attack button creation =
+light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
+heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
+
+
+# = Magic button creation =
 class Spell:
     def __init__(self, img):
         self.image = img
-        self.function = lambda: print("Test")
+        self.function = place_main
 
 
 test = Player("test_player_object")
@@ -79,14 +131,8 @@ test.spells = [Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
                Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
                Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6))]
 
-for spell in test.spells:
-    button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, command=spell.function)
-    button.place(x=1920/(len(test.spells)+1)*(test.spells.index(spell)+1)-48*3, y=845)
-'''  # = Magic button creation and placement =
 
-'''
 inventory_frame = Frame(scr, width=scr.winfo_screenwidth() - 40, height=scr.winfo_screenheight() // 4 + 40, bg="#554466")
-inventory_frame.place(x=20, y=1080 // 4 * 3 - 70)
 inventory_frame.pack_propagate(False)
 
 test.inventory = [Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
@@ -99,26 +145,17 @@ test.inventory = [Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
                   Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
                   Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
                   Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
                   ]
 
-temp_x = 0
-temp_y = 1
-for item in test.inventory:
-    button = Button(inventory_frame, image=item.image, borderwidth=0, highlightthickness=0, command=item.function)
+# = Bag button creation and placement and other... requires revision =
 
-    temp_y += 1
-    if test.inventory.index(item) % 3 == 0:
-        temp_x += 1
-        temp_y = 1
-    button.place(x=temp_x*77*6-72*6, y=temp_y*16*6-16*6+10)
-'''  # = Bag button creation and placement and other... requires revision =
-
-"""  # ---------------- Display setting ----------------
+# """  # ---------------- Display setting ----------------
 
 
 def battle(players: list[Player], enemies: list[Foe], location):
+    # Battle display prep
+    place_bg()
+
     # Decide turn order:
     turn_order = []
     for _ in range(0, 30):
@@ -167,6 +204,8 @@ def battle(players: list[Player], enemies: list[Foe], location):
                     battler.status.remove(status_effect)
 
         data = [living_players, living_foe]
+        if battler in players:
+            place_main()
         battler.turn(data)
 
         for status_effect in battler.status:
