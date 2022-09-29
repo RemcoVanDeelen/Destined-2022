@@ -1,4 +1,5 @@
-from Test_room_definitions import *
+from Room_class import *
+from Core import *
 
 
 class Player:
@@ -33,7 +34,7 @@ class Player:
         self.position = [1, 1]
         self.tile = None
         self.coordinates = [self.position[0] * 48 * 5 / 4 + 24 * 5 / 4,  self.position[1] * 60]
-        self.room = Room_1
+        self.room = None
         self.running = False
         self.moving = False
         self.move_delay = 400

@@ -1,29 +1,19 @@
-from random import randint
 from Player_class import *
+from Enemy_class import *
+from Core import *
+
+in_turn = IntVar()
 
 
-class Foe:
-    def __init__(self, speed, max_health, evasion, soul, moves, name):
-        # Stats
-        self.speed = speed  # Speed stat for turn order,
-        self.health = max_health  # Current health,
-        self.max_health = max_health  # Maximum health,
-        self.evasion = evasion  # percent chance to avoid being hit,
-        self.soul = soul  # Soul received on kill,
-        self.moves = moves  # List of moves,
-        self.name = name  # Name
-        self.status = []  # Current status effects
+def end_turn():
+    place_main()
+    for button in placed_buttons:
+        button.configure(state="disabled")
+    global data
+    data[1][0].health -= 20
 
-        for move in moves:
-            setattr(self, move.__str__(), move)
-
-    def turn(self, data):
-        percent = []
-        for move in self.moves:
-            for _ in range(0, move.chance):
-                percent.append(move)
-        rng = randint(0, 100)
-        percent[rng-1].function(data, percent[rng-1])
+    in_turn.set(1)
+# function
 
 
 # imagery:
@@ -40,13 +30,19 @@ img_light_attack_button = PhotoImage(file="ButtonTest-Light_atk.png").zoom(6, 6)
 img_battle_frame = PhotoImage(file="BattleMenuTest.png").zoom(5, 5)
 img_text_label_frame = PhotoImage(file="TextLabelTest.png").zoom(5, 5)
 
-global placed_buttons
+# Global list definitions (need to be moved to other location):
 placed_buttons = []
+data = []
 
 
-def place_bg():
+# Display functions:
+def place_bg(location):
+    scr.bg = PhotoImage(file="images/Backgrounds/"+location+".png").zoom(10, 10)
+    scr.create_image(1920/2, 1080/2, image=scr.bg)
+
     scr.create_image(15+1890/2, 1080 // 4 * 3 + 80, image=img_battle_frame)
     scr.create_image(15+1890/2, 1080 // 4 * 3 - 130, image=img_text_label_frame)
+    return_button.place(x=50, y=760)
 
 
 def place_attack():
@@ -60,35 +56,35 @@ def place_attack():
 
 
 def place_spells():
-    global placed_buttons
+    global placed_buttons, data
     for child in placed_buttons:
         child.place_forget()
     placed_buttons = []
 
-    for spell in test.spells:
+    for spell in data[2].spells:
         button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=spell.function)
-        button.place(x=1920/(len(test.spells)+1)*(test.spells.index(spell)+1)-48*3, y=845)
+        button.place(x=1920/(len(data[2].spells)+1)*(data[2].spells.index(spell)+1)-48*3, y=845)
 
         placed_buttons.append(button)
 
 
 def place_bag():
-    global placed_buttons
+    global placed_buttons, data
     for child in placed_buttons:
         child.place_forget()
     placed_buttons = []
 
     temp_x = 0
     temp_y = 1
-    for item in test.inventory:
+    for item in data[2].inventory:
         button = Button(scr, image=item.image, borderwidth=0, highlightthickness=0,
-                        activebackground="#000000", command=item.function)
+                        activebackground="#31486F", command=item.function)
 
         temp_y += 1
-        if test.inventory.index(item) % 3 == 0:
+        if data[2].inventory.index(item) % 3 == 0:
             temp_x += 1
             temp_y = 1
-        button.place(x=temp_x * 77 * 6 - 72 * 6, y=temp_y * 16 * 6 - 16 * 6 + 745)
+        button.place(x=temp_x * 77 * 6 - 72 * 6 + 120, y=temp_y * 16 * 6 - 16 * 6 + 760)
         placed_buttons.append(button)
 
 
@@ -103,49 +99,36 @@ def place_main():
     action_button.place(x=1920 / 5 * 4 - 48 * 3, y=845)
 
 
+def place_actions():
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = []
+
+
 # = Main button creation and placement =
 fight_button = Button(scr, image=img_fight_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_attack)
 magic_button = Button(scr, image=img_magic_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_spells)
 bag_button = Button(scr, image=img_bag_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_bag)
-action_button = Button(scr, image=img_action_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
+action_button = Button(scr, image=img_action_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_actions)
 
 return_button = Button(scr, image=img_return_button, borderwidth=0, highlightthickness=0, activebackground="#555555", bg="#555555", command=place_main)
-return_button.place(x=50, y=760)
+
 
 # = Attack button creation =
-light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
-heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000")
+light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
+heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
 
 
 # = Magic button creation =
 class Spell:
     def __init__(self, img):
         self.image = img
-        self.function = place_main
-
-
-test = Player("test_player_object")
-test.spells = [Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-               Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-               Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-               Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-               Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6))]
+        self.function = end_turn
 
 
 inventory_frame = Frame(scr, width=scr.winfo_screenwidth() - 40, height=scr.winfo_screenheight() // 4 + 40, bg="#554466")
 inventory_frame.pack_propagate(False)
-
-test.inventory = [Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
-                  ]
 
 # = Bag button creation and placement and other... requires revision =
 
@@ -154,7 +137,9 @@ test.inventory = [Spell(PhotoImage(file="ButtonTest-Item.png").zoom(6, 6)),
 
 def battle(players: list[Player], enemies: list[Foe], location):
     # Battle display prep
-    place_bg()
+    global data
+    place_bg(location)
+    players[0].room.unload()
 
     # Decide turn order:
     turn_order = []
@@ -203,9 +188,13 @@ def battle(players: list[Player], enemies: list[Foe], location):
                 if status_effect.count == 0:
                     battler.status.remove(status_effect)
 
-        data = [living_players, living_foe]
+        data = [living_players, living_foe, battler]
         if battler in players:
             place_main()
+            for button in placed_buttons:
+                button.configure(state="normal")
+            return_button.wait_variable(in_turn)
+
         battler.turn(data)
 
         for status_effect in battler.status:
@@ -221,3 +210,12 @@ def battle(players: list[Player], enemies: list[Foe], location):
                     living_foe.remove(battler)
                 elif battler in living_players:
                     living_players.remove(battler)
+
+        win.update_idletasks()
+    players[0].room.load()
+    for player in players:
+        scr.tag_raise(player.disp.tag)
+    for child in scr.winfo_children():
+        for player in players:
+            if child != player.disp:
+                child.place_forget()
