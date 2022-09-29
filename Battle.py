@@ -1,6 +1,6 @@
+# from Core import *
 from Player_class import *
 from Enemy_class import *
-from Core import *
 
 in_turn = IntVar()
 
@@ -17,18 +17,18 @@ def end_turn():
 
 
 # imagery:
-img_fight_button = PhotoImage(file="ButtonTest-Fight.png").zoom(6, 6)
-img_magic_button = PhotoImage(file="ButtonTest-Magic.png").zoom(6, 6)
-img_bag_button = PhotoImage(file="ButtonTest-Bag.png").zoom(6, 6)
-img_action_button = PhotoImage(file="ButtonTest-Action.png").zoom(6, 6)
-img_return_button = PhotoImage(file="ReturnButtonTest.png").zoom(3, 3)
+img_fight_button = PhotoImage(file="images/ButtonTest-Fight.png").zoom(6, 6)
+img_magic_button = PhotoImage(file="images/ButtonTest-Magic.png").zoom(6, 6)
+img_bag_button = PhotoImage(file="images/ButtonTest-Bag.png").zoom(6, 6)
+img_action_button = PhotoImage(file="images/ButtonTest-Action.png").zoom(6, 6)
+img_return_button = PhotoImage(file="images/ReturnButtonTest.png").zoom(3, 3)
 
-img_heavy_attack_button = PhotoImage(file="ButtonTest-Heavy_atk.png").zoom(6, 6)
-img_light_attack_button = PhotoImage(file="ButtonTest-Light_atk.png").zoom(6, 6)
+img_heavy_attack_button = PhotoImage(file="images/ButtonTest-Heavy_atk.png").zoom(6, 6)
+img_light_attack_button = PhotoImage(file="images/ButtonTest-Light_atk.png").zoom(6, 6)
 
 
-img_battle_frame = PhotoImage(file="BattleMenuTest.png").zoom(5, 5)
-img_text_label_frame = PhotoImage(file="TextLabelTest.png").zoom(5, 5)
+img_battle_frame = PhotoImage(file="images/BattleMenuTest.png").zoom(5, 5)
+img_text_label_frame = PhotoImage(file="images/TextLabelTest.png").zoom(5, 5)
 
 # Global list definitions (need to be moved to other location):
 placed_buttons = []
@@ -193,7 +193,7 @@ def battle(players: list[Player], enemies: list[Foe], location):
             place_main()
             for button in placed_buttons:
                 button.configure(state="normal")
-            return_button.wait_variable(in_turn)
+            scr.wait_variable(in_turn)
 
         battler.turn(data)
 

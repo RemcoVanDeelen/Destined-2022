@@ -1,5 +1,4 @@
 from random import randint
-from Core import *
 
 
 class Foe:

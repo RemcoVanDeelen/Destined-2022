@@ -13,16 +13,16 @@ Room_1.load()
 Player1 = Player("Player1")
 Player1.room = Room_1
 Player1.spells = [
-    Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-    Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
-    Spell(PhotoImage(file="ButtonTest-spell.png").zoom(6, 6)),
+    Spell(PhotoImage(file="images/ButtonTest-spell.png").zoom(6, 6)),
+    Spell(PhotoImage(file="images/ButtonTest-spell.png").zoom(6, 6)),
+    Spell(PhotoImage(file="images/ButtonTest-spell.png").zoom(6, 6)),
 ]
 Player1.inventory = [
-    Spell(PhotoImage(file="ButtonTest-Item.png").zoom(4, 4)),
-    Spell(PhotoImage(file="ButtonTest-Item.png").zoom(4, 4)),
-    Spell(PhotoImage(file="ButtonTest-Item.png").zoom(4, 4)),
-    Spell(PhotoImage(file="ButtonTest-Item.png").zoom(4, 4)),
-    Spell(PhotoImage(file="ButtonTest-Item.png").zoom(4, 4)),
+    Spell(PhotoImage(file="images/ButtonTest-Item.png").zoom(4, 4)),
+    Spell(PhotoImage(file="images/ButtonTest-Item.png").zoom(4, 4)),
+    Spell(PhotoImage(file="images/ButtonTest-Item.png").zoom(4, 4)),
+    Spell(PhotoImage(file="images/ButtonTest-Item.png").zoom(4, 4)),
+    Spell(PhotoImage(file="images/ButtonTest-Item.png").zoom(4, 4)),
 ]
 Player1.disp.roll()
 

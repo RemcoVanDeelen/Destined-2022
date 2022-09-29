@@ -1,8 +1,4 @@
-# from Room_class import *
-# from tkinter import *
-# import sys
-
-from Core import *
+# from Core import *
 from Player_class import *
 from Enemy_class import *
 from Battle import *
@@ -10,9 +6,9 @@ from Room_class import *
 import sys
 
 
-TileTest = PhotoImage(file="TileTest.png").zoom(5, 5).subsample(4, 4)
-WallTest = PhotoImage(file="WallTest.png").zoom(5, 5).subsample(4, 4)
-DoorTest = PhotoImage(file="DoorTest.png").zoom(5, 5).subsample(4, 4)
+TileTest = PhotoImage(file="images/TileTest.png").zoom(5, 5).subsample(4, 4)
+WallTest = PhotoImage(file="images/WallTest.png").zoom(5, 5).subsample(4, 4)
+DoorTest = PhotoImage(file="images/DoorTest.png").zoom(5, 5).subsample(4, 4)
 
 
 Room_1 = Room([  # Y = 0
