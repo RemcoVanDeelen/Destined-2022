@@ -6,10 +6,10 @@ from Room_class import *
 import sys
 
 
-TileTest = PhotoImage(file="images/TileTest.png").zoom(5, 5).subsample(4, 4)
-WallTest = PhotoImage(file="images/WallTest.png").zoom(5, 5).subsample(4, 4)
-DoorTest = PhotoImage(file="images/DoorTest.png").zoom(5, 5).subsample(4, 4)
-
+TileTest = PhotoImage(file="images/Movement_GUI/TileTest.png").zoom(5, 5).subsample(4, 4)
+WallTest = PhotoImage(file="images/Movement_GUI/WallTest.png").zoom(5, 5).subsample(4, 4)
+DoorTest = PhotoImage(file="images/Movement_GUI/DoorTest.png").zoom(5, 5).subsample(4, 4)
+Player1 = Player("Player1")  # PLAYER location from main.py moved for tile-combat
 
 Room_1 = Room([  # Y = 0
                Tile(scr, (0, 0), [WallTest], None, False, False, None, True),
@@ -22,7 +22,7 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (7, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (8, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (9, 0), [WallTest], None, False, False, None, True),
-               Tile(scr, (10, 0), [WallTest], None, False, False, None, True),
+               Tile(scr, (10, 0), [DoorTest], lambda: battle([Player1], [Test_foe1], "TestBackground"), True, False, None, True),
                Tile(scr, (11, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (12, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (13, 0), [WallTest], None, False, False, None, True),

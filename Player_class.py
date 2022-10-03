@@ -26,7 +26,7 @@ class Player:
         self.max_health = 20
         self.health = 20
         self.max_stamina = 20
-        self.stamina = 10
+        self.stamina = 20
         self.speed = 10
 
         # Movement statistics
@@ -47,19 +47,19 @@ class Player:
         self.idle_n_sprites = []
         for ind in range(0, 6):
             self.idle_n_sprites.append(
-                PhotoImage(file="images/player_idle_N.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_N.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
         self.idle_e_sprites = []
         for ind in range(0, 6):
             self.idle_e_sprites.append(
-                PhotoImage(file="images/player_idle_E.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_E.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
         self.idle_s_sprites = []
         for ind in range(0, 6):
             self.idle_s_sprites.append(
-                PhotoImage(file="images/player_idle_S.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_S.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
         self.idle_w_sprites = []
         for ind in range(0, 6):
             self.idle_w_sprites.append(
-                PhotoImage(file="images/player_idle_W.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_W.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
 
         self.idle_framerate = [200, 90, 105, 200, 105, 90]
 

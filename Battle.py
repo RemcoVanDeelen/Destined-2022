@@ -5,30 +5,46 @@ from Enemy_class import *
 in_turn = IntVar()
 
 
-def end_turn():
+def end_turn():  # function for ending turns, spell in put is after this because spells use this function.
     place_main()
     for button in placed_buttons:
         button.configure(state="disabled")
-    global data
-    data[1][0].health -= 20
+    # data[1][0].health -= 10
 
     in_turn.set(1)
-# function
 
+
+def find_target(targets):
+    global placed_buttons
+    for child in placed_buttons:
+        child.place_forget()
+    placed_buttons = []
+    target_index = IntVar()
+
+    for target in targets:
+        button = Button(scr, text=target.name, font=("", 15), borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=target: target_index.set(targets.index(_)))
+        button.place(x=1920/(len(targets)+1)*(targets.index(target)+1)-48*3, y=845)
+
+        placed_buttons.append(button)
+    scr.wait_variable(target_index)
+    return targets[target_index.get()]
+
+
+from Spell_definitions import *
 
 # imagery:
-img_fight_button = PhotoImage(file="images/ButtonTest-Fight.png").zoom(6, 6)
-img_magic_button = PhotoImage(file="images/ButtonTest-Magic.png").zoom(6, 6)
-img_bag_button = PhotoImage(file="images/ButtonTest-Bag.png").zoom(6, 6)
-img_action_button = PhotoImage(file="images/ButtonTest-Action.png").zoom(6, 6)
-img_return_button = PhotoImage(file="images/ReturnButtonTest.png").zoom(3, 3)
+img_fight_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Fight.png").zoom(6, 6)
+img_magic_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Magic.png").zoom(6, 6)
+img_bag_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Bag.png").zoom(6, 6)
+img_action_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Action.png").zoom(6, 6)
+img_return_button = PhotoImage(file="images/Battle_GUI/ReturnButtonTest.png").zoom(3, 3)
 
-img_heavy_attack_button = PhotoImage(file="images/ButtonTest-Heavy_atk.png").zoom(6, 6)
-img_light_attack_button = PhotoImage(file="images/ButtonTest-Light_atk.png").zoom(6, 6)
+img_heavy_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Heavy_atk.png").zoom(6, 6)
+img_light_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Light_atk.png").zoom(6, 6)
 
 
-img_battle_frame = PhotoImage(file="images/BattleMenuTest.png").zoom(5, 5)
-img_text_label_frame = PhotoImage(file="images/TextLabelTest.png").zoom(5, 5)
+img_battle_frame = PhotoImage(file="images/Battle_GUI/BattleMenuTest.png").zoom(5, 5)
+img_text_label_frame = PhotoImage(file="images/Battle_GUI/TextLabelTest.png").zoom(5, 5)
 
 # Global list definitions (need to be moved to other location):
 placed_buttons = []
@@ -62,7 +78,7 @@ def place_spells():
     placed_buttons = []
 
     for spell in data[2].spells:
-        button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=spell.function)
+        button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=spell: _.cast(data))
         button.place(x=1920/(len(data[2].spells)+1)*(data[2].spells.index(spell)+1)-48*3, y=845)
 
         placed_buttons.append(button)
@@ -78,7 +94,7 @@ def place_bag():
     temp_y = 1
     for item in data[2].inventory:
         button = Button(scr, image=item.image, borderwidth=0, highlightthickness=0,
-                        activebackground="#31486F", command=item.function)
+                        activebackground="#31486F", command=lambda _=item: _.function)
 
         temp_y += 1
         if data[2].inventory.index(item) % 3 == 0:
@@ -119,14 +135,6 @@ return_button = Button(scr, image=img_return_button, borderwidth=0, highlightthi
 light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
 heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
 
-
-# = Magic button creation =
-class Spell:
-    def __init__(self, img):
-        self.image = img
-        self.function = end_turn
-
-
 inventory_frame = Frame(scr, width=scr.winfo_screenwidth() - 40, height=scr.winfo_screenheight() // 4 + 40, bg="#554466")
 inventory_frame.pack_propagate(False)
 
@@ -140,6 +148,14 @@ def battle(players: list[Player], enemies: list[Foe], location):
     global data
     place_bg(location)
     players[0].room.unload()
+    players[0].health_label = Label(scr, text=players[0].health)
+    players[0].health_label.place(x=50, y=1080 // 4 * 3 - 130)
+
+    for foe in enemies:
+        foe.image = Button(scr, image=foe.display, command=lambda _=foe: print(_.name), border=0, highlightthickness=0, activebackground="#000000", bg="#000000")
+        foe.image.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50)
+        foe.health_label = Label(scr, text=foe.health)
+        foe.health_label.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50+96*2.5)
 
     # Decide turn order:
     turn_order = []
@@ -166,7 +182,10 @@ def battle(players: list[Player], enemies: list[Foe], location):
 
     # Battle:
     living_foe = enemies[0:len(enemies)]
-    living_players = players[0:len(players)]
+    living_players = []
+    for player in players:
+        if player.health > 0:
+            living_players.append(player)
 
     turn = 0
     turn_total = 0
@@ -205,9 +224,11 @@ def battle(players: list[Player], enemies: list[Foe], location):
 
         # After turn
         for battler in turn_order:
+            battler.health_label.configure(text=battler.health)
             if battler.health <= 0:
                 if battler in living_foe:
                     living_foe.remove(battler)
+                    battler.image.configure(state="disabled")
                 elif battler in living_players:
                     living_players.remove(battler)
 
@@ -215,6 +236,10 @@ def battle(players: list[Player], enemies: list[Foe], location):
     players[0].room.load()
     for player in players:
         scr.tag_raise(player.disp.tag)
+        player.status = []
+    for foe in enemies:
+        foe.health = foe.max_health
+        foe.status = []
     for child in scr.winfo_children():
         for player in players:
             if child != player.disp:
