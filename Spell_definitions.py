@@ -5,7 +5,7 @@ from Battle import end_turn, find_target
 
 class Spell:
     def __init__(self, spell: str = "None",
-                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6)):
+                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2)):
 
         self.cast = getattr(self, spell)
         self.image = img
@@ -374,35 +374,35 @@ class Spell:
         end_turn()
 
 
-empower = Spell("empower", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-regenerate = Spell("regenerate", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-lightning = Spell("lightning", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+empower = Spell("empower", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
+regenerate = Spell("regenerate", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
+lightning = Spell("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))
 
-elemental_volley = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-foresight = Spell("foresight", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+elemental_volley = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))
+foresight = Spell("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))
 
-stasis = Spell("stasis", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-agility = Spell("agility", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-weaken = Spell("weaken", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+stasis = Spell("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))
+agility = Spell("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))
+weaken = Spell("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))
 
-fireball = Spell("fireball", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+fireball = Spell("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))
 
-stamina = Spell("stamina", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-whirlwind = Spell("whirlwind", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-enchant_weapon = Spell("enchant_weapon", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+stamina = Spell("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))
+whirlwind = Spell("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))
+enchant_weapon = Spell("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))
 
-recover = Spell("recover", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-venom = Spell("venom", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+recover = Spell("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))
+venom = Spell("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))
 
-focus = Spell("focus", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-calm = Spell("calm", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-heal = Spell("heal", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+focus = Spell("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))
+calm = Spell("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))
+heal = Spell("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))
 
-barrier = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+barrier = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))
 
-chaotic_strike = Spell("chaotic_strike", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-siphon = Spell("siphon", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
-slow_time = Spell("slow_time", PhotoImage(file="images/Battle_GUI/ButtonTest-spell.png").zoom(6, 6))
+chaotic_strike = Spell("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))
+siphon = Spell("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))
+slow_time = Spell("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))
 
 empowered = "FILLER"
 

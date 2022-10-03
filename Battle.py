@@ -67,6 +67,15 @@ def place_attack():
         child.place_forget()
     placed_buttons = [light_attack_button, heavy_attack_button]
 
+    if data[2].stamina < 5:
+        light_attack_button.configure(state="disabled")
+    else:
+        light_attack_button.configure(state="normal")
+    if data[2].stamina < 8:
+        heavy_attack_button.configure(state="disabled")
+    else:
+        heavy_attack_button.configure(state="normal")
+
     light_attack_button.place(x=1920 / 3 - 48 * 3, y=845)
     heavy_attack_button.place(x=1920 / 3 * 2 - 48 * 3, y=845)
 
@@ -122,6 +131,23 @@ def place_actions():
     placed_buttons = []
 
 
+# melee attack functions
+def light_attack():
+    target = find_target(data[1])
+    target.health -= 7  # FILLER damage.
+    data[2].stamina -= 5  # FILLER stamina cost.
+
+    end_turn()
+
+
+def heavy_attack():
+    target = find_target(data[1])
+    target.health -= 12                         # FILLER damage.
+    data[2].stamina -= 8                        # FILLER stamina cost.
+
+    end_turn()
+
+
 # = Main button creation and placement =
 fight_button = Button(scr, image=img_fight_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_attack)
 magic_button = Button(scr, image=img_magic_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_spells)
@@ -132,8 +158,8 @@ return_button = Button(scr, image=img_return_button, borderwidth=0, highlightthi
 
 
 # = Attack button creation =
-light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
-heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=end_turn)
+light_attack_button = Button(scr, image=img_light_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=light_attack)
+heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=heavy_attack)
 
 inventory_frame = Frame(scr, width=scr.winfo_screenwidth() - 40, height=scr.winfo_screenheight() // 4 + 40, bg="#554466")
 inventory_frame.pack_propagate(False)
