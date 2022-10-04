@@ -22,7 +22,7 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (7, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (8, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (9, 0), [WallTest], None, False, False, None, True),
-               Tile(scr, (10, 0), [DoorTest], lambda: battle([Player1], [Test_foe3], "TestBackground"), True, False, None, True),
+               Tile(scr, (10, 0), [DoorTest], lambda: battle([Player1], [Dummy], "TestBackground"), True, False, None, True),
                Tile(scr, (11, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (12, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (13, 0), [WallTest], None, False, False, None, True),

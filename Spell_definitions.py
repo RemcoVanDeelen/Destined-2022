@@ -1,6 +1,7 @@
 from Core import *
 from random import randint
 from Battle import end_turn, find_target
+from Status_effects import *
 
 
 class Spell:
@@ -10,6 +11,7 @@ class Spell:
         self.cast = getattr(self, spell)
         self.image = img
         self.cooldown = 0
+        self.name = spell
 
     def regenerate(self, data):
         # Check empowered,
@@ -18,9 +20,9 @@ class Spell:
             empower.cooldown = 3                        # FILLER cooldown.
 
         # Grant effect,
-            data[2].status.append(regenerating_empowered)
+            data[2].status.append(Effect("start", "regenerating_empowered", 3))
         else:
-            data[2].status.append(regenerating)
+            data[2].status.append(Effect("start", "regenerating", 3))
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
@@ -30,7 +32,7 @@ class Spell:
     def empower(self, data):
         # Grant effect.
         data[2].status.append(empowered)
-        self.cooldown = True
+        self.cooldown = 999
         print(2, self.cast)
         end_turn()
 
@@ -82,7 +84,7 @@ class Spell:
 
     def foresight(self, data):
         # Grant effect,
-        data[2].status.append(foresight_effect)
+        data[2].status.append(Effect("?", "foresight_effect", 4))
 
         # Check empowered,
         if empowered in data[2].status:
@@ -91,20 +93,19 @@ class Spell:
 
         # Grant effect [2],
             for foe in data[1]:
-                foe.status.append(opponent_foresight_effect)
+                foe.status.append(Effect("?", "opponent_foresight_effect", 4))
 
         else:
             if len(data[1]) > 2:
                 enemies = data[1][0:3]
                 target = enemies[randint(0, 2)]
                 enemies.remove(target)
-                target.status.append(opponent_foresight_effect)
+                target.status.append(Effect("?", "opponent_foresight_effect", 4))
                 target = enemies[randint(0, 1)]
-                enemies.remove(target)
-                target.status.append(opponent_foresight_effect)
+                target.status.append(Effect("?", "opponent_foresight_effect", 4))
             else:
                 for foe in data[1]:
-                    foe.status.append(opponent_foresight_effect)
+                    foe.status.append(Effect("?", "opponent_foresight_effect", 4))
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
@@ -113,10 +114,15 @@ class Spell:
 
     def stasis(self, data):
         # obtain target,
-        target = find_target(data[1])
+        targets = []
+        for foe in data[1]:
+            print(next((effect for effect in foe.status if effect.effect == "stasis_effect"), None))
+            if next((effect for effect in foe.status if effect.effect == "stasis_effect"), None) is None:
+                targets.append(foe)
+        target = find_target(targets)
 
         # Grant effect,
-        target.status.append(stasis)
+        target.status.append(Effect(0, "stasis_effect", 2))
 
         # check empowered,
         if empowered in data[2].status:
@@ -155,7 +161,7 @@ class Spell:
         target.health -= dmg
 
         # Grant effect
-        target.status.append(weakened),
+        target.status.append(Effect("end", "weakened", 4)),
 
         # start cooldown.
         self.cooldown = cd
@@ -172,7 +178,7 @@ class Spell:
             empower.cooldown = 3                         # FILLER cooldown.
 
             # apply effect,
-            target.status.append(burning)
+            target.status.append(Effect("end", "burning", 3))
             cd = 1                                       # FILLER cooldown.
 
         # damage target,
@@ -220,7 +226,7 @@ class Spell:
             data[2].status.append(enchanted_weapon)
 
         # start cooldown.
-        self.cooldown = 3                               # FILLER cooldown.
+        self.cooldown = 999                               # FILLER cooldown.
         print(12, self.cast)
         end_turn()
 
@@ -259,9 +265,9 @@ class Spell:
             empower.cooldown = 3                         # FILLER cooldown.
 
         # Grant effect,
-            target.status.append(venom_effect_empowered)
+            target.status.append(Effect("always", "venom_empowered", 3))
         else:
-            target.status.append(venom_effect)
+            target.status.append(Effect("end", "venom", 3))
 
         # start cooldown
         self.cooldown = 3                                # FILLER cooldown.
@@ -303,7 +309,7 @@ class Spell:
 
     def barrier(self, data):
         # Grant effect,
-        data[2].status.append(barrier_effect)
+        data[2].status.append(Effect("?", "barrier_effect", 4))
 
         # check empowered,
         if empowered in data[2].status:
@@ -312,10 +318,10 @@ class Spell:
 
         # Grant effect [2]
             for foe in data[1]:
-                foe.status.append(opponent_barrier_effect_empowered)
+                foe.status.append(Effect("?", "opponent_barrier_effect_empowered", 4))
         else:
             for foe in data[1]:
-                foe.status.append(opponent_barrier_effect)
+                foe.status.append(Effect("?", "opponent_barrier_effect", 4))
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
@@ -374,8 +380,8 @@ class Spell:
         end_turn()
 
 
-empower = Spell("empower", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
-regenerate = Spell("regenerate", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
+regenerate = Spell("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
+empower = Spell("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
 lightning = Spell("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))
 
 elemental_volley = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))
@@ -403,25 +409,3 @@ barrier = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-
 chaotic_strike = Spell("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))
 siphon = Spell("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))
 slow_time = Spell("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))
-
-empowered = "FILLER"
-
-regenerating = "FILLER"
-regenerating_empowered = "FILLER"
-
-foresight_effect = "FILLER"
-opponent_foresight_effect = "FILLER"
-
-enchanted_weapon = "FILLER"
-enchanted_weapon_empowered = "FILLER"
-
-barrier_effect = "FILLER"
-opponent_barrier_effect = "FILLER"
-opponent_barrier_effect_empowered = "FILLER"
-
-weakened = "FILLER"
-
-burning = "FILLER"
-
-venom_effect = "FILLER"
-venom_effect_empowered = "FILLER"

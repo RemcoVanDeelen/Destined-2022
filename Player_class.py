@@ -42,6 +42,7 @@ class Player:
         # Imagery
         self.tag = tag
         self.facing = S
+        self.health_label = None
 
         # sprite list:
         self.idle_n_sprites = []

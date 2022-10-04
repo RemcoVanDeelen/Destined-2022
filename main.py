@@ -1,4 +1,5 @@
 from Test_room_definitions import *
+from Spell_definitions import *
 
 '''
 for _ in range(0, 20):
@@ -12,7 +13,7 @@ Room_1.load()
 scr.tag_raise(Player1.tag)
 # Player1 = Player("Player1")        moved to = Test_room_definitions.py =
 Player1.room = Room_1
-Player1.spells = [elemental_volley, whirlwind, heal, lightning, siphon, fireball]
+Player1.spells = [empower, heal, chaotic_strike]
 Player1.disp.roll()
 
 win.bind("<w>", Player1.move)

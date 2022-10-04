@@ -55,12 +55,20 @@ def heal_ally(battle_data, move_data):
         targets[0].health = targets[0].max_health
 
 
+def _skip(battle_data, move_data):
+    pass
+
+
 attack = Move("damage", 100, 1, harm)
 attack2 = Move("damage", 50, 1, harm)
 heal = Move("heal-ally", 50, 5, heal_ally)
+skip = Move("skip", 100, 5, _skip)
 
 from tkinter import PhotoImage
 foe_img = PhotoImage(file="images/Battle_GUI/FoeTest.png").zoom(5, 5).subsample(2, 2)
+dummy_img = PhotoImage(file="images/Battle_GUI/Enemies/Dummy_foe.png").zoom(5, 5).subsample(2, 2)
+
 Test_foe1 = Foe(8, 20, 0, 5, [attack], "TEST_FOE_NAME1", foe_img)
 Test_foe2 = Foe(12, 15, 10, 5, [attack2, heal], "TEST_FOE_NAME2", foe_img)
 Test_foe3 = Foe(5, 25, 0, 5, [attack], "TEST_FOE_NAME3", foe_img)
+Dummy = Foe(4, 999, 0, 0, [skip], "DUMMY_FOE", dummy_img)

@@ -18,6 +18,7 @@ def find_target(targets):
     global placed_buttons
     for child in placed_buttons:
         child.place_forget()
+    return_button.configure(state="disabled")
     placed_buttons = []
     target_index = IntVar()
 
@@ -27,10 +28,9 @@ def find_target(targets):
 
         placed_buttons.append(button)
     scr.wait_variable(target_index)
+    return_button.configure(state="normal")
     return targets[target_index.get()]
 
-
-from Spell_definitions import *
 
 # imagery:
 img_fight_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Fight.png").zoom(6, 6)
@@ -90,6 +90,9 @@ def place_spells():
         button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=spell: _.cast(data))
         button.place(x=1920/(len(data[2].spells)+1)*(data[2].spells.index(spell)+1)-48*3, y=845)
 
+        if spell.cooldown > 0:
+            button.configure(state="disabled")
+
         placed_buttons.append(button)
 
 
@@ -134,15 +137,37 @@ def place_actions():
 # melee attack functions
 def light_attack():
     target = find_target(data[1])
-    target.health -= 7  # FILLER damage.
-    data[2].stamina -= 5  # FILLER stamina cost.
+    damage = 7                                              # FILLER damage.
+    for status_effect in data[2].status:
+        if status_effect.time == "attacking":
+            value = status_effect.tick(data)
+            if status_effect.effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:
+                damage += value
+            if status_effect.duration == 0:
+                data[2].status.remove(status_effect)
+                if status_effect.effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:
+                    next((spell for spell in data[2].spells if spell.name == "empower"), None).cooldown = 3          # FILLER cooldown.
+
+    target.health -= damage
+    data[2].stamina -= 5                # FILLER stamina cost.
 
     end_turn()
 
 
 def heavy_attack():
     target = find_target(data[1])
-    target.health -= 12                         # FILLER damage.
+    damage = 12                                              # FILLER damage.
+    for status_effect in data[2].status:
+        if status_effect.time == "attacking":
+            value = status_effect.tick(data)
+            if status_effect.effect in ["enchanted_weapon", "enchanted_weapon"]:
+                damage += value
+            if status_effect.duration == 0:
+                data[2].status.remove(status_effect)
+                if status_effect.effect in ["enchanted_weapon", "enchanted_weapon"]:
+                    next((spell for spell in data[2].spells if spell.name == "empower"), None).cooldown = 3          # FILLER cooldown.
+
+    target.health -= damage
     data[2].stamina -= 8                        # FILLER stamina cost.
 
     end_turn()
@@ -170,6 +195,9 @@ inventory_frame.pack_propagate(False)
 
 
 def battle(players: list[Player], enemies: list[Foe], location):
+    if enemies == [Dummy]:
+        players[0].health = 1
+
     # Battle display prep
     global data
     place_bg(location)
@@ -226,30 +254,50 @@ def battle(players: list[Player], enemies: list[Foe], location):
         if battler.health <= 0:
             continue
 
+        data = [living_players, living_foe, battler]
+
         # During turn
         for status_effect in battler.status:
             if status_effect.time == "start":
-                status_effect.tick()
-                if status_effect.count == 0:
+                status_effect.tick(data)
+                if status_effect.duration == 0:
                     battler.status.remove(status_effect)
 
         data = [living_players, living_foe, battler]
-        if battler in players:
-            place_main()
-            for button in placed_buttons:
-                button.configure(state="normal")
-            scr.wait_variable(in_turn)
+        has_stasis = next((effect for effect in battler.status if effect.effect == "stasis_effect"), None)
+        if has_stasis is not None:
+            has_stasis.tick(data)
+            if has_stasis.duration <= 0:
+                battler.status.remove(has_stasis)
+        else:
+            if battler in players:
+                place_main()
+                for button in placed_buttons:
+                    button.configure(state="normal")
+                for spell in battler.spells:
+                    if spell.cooldown > 0:
+                        spell.cooldown -= 1
+                scr.wait_variable(in_turn)
 
-        battler.turn(data)
+            battler.turn(data)
+
+        data = [living_players, living_foe, battler]
 
         for status_effect in battler.status:
             if status_effect.time == "end":
-                status_effect.tick()
-                if status_effect.count == 0:
+                status_effect.tick(data)
+                if status_effect.duration == 0:
                     battler.status.remove(status_effect)
+
+        data = [living_players, living_foe, battler]
 
         # After turn
         for battler in turn_order:
+            for status_effect in battler.status:
+                if status_effect.time == "always":
+                    status_effect.tick([living_players, living_foe, battler])
+                    if status_effect.duration == 0:
+                        battler.status.remove(status_effect)
             battler.health_label.configure(text=battler.health)
             if battler.health <= 0:
                 if battler in living_foe:
@@ -263,6 +311,10 @@ def battle(players: list[Player], enemies: list[Foe], location):
     for player in players:
         scr.tag_raise(player.disp.tag)
         player.status = []
+        for spell in player.spells:
+            spell.cooldown = 0
+            if spell.name == "slow_time":
+                spell.cooldown = 1
     for foe in enemies:
         foe.health = foe.max_health
         foe.status = []
