@@ -62,6 +62,7 @@ class Effect:
         self.duration -= 1
 
 
+'''
 empowered = Effect(0, "empowered", True)
 
 regenerating = Effect("start", "regenerating", 3)
@@ -85,3 +86,4 @@ venom_effect = Effect("end", "venom", 3)
 venom_effect_empowered = Effect("always", "venom_empowered", 3)
 
 stasis_effect = Effect(0, "stasis_effect", 2)
+'''  # Effect examples

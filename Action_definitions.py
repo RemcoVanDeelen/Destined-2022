@@ -4,18 +4,20 @@ from Battle import end_turn, find_target
 from Status_effects import *
 
 
-class Spell:
-    def __init__(self, spell: str = "None",
+class Action:
+    def __init__(self, function: str = "None",
                  img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2)):
 
-        self.cast = getattr(self, spell)
+        self.use = getattr(self, function)
         self.image = img
         self.cooldown = 0
-        self.name = spell
+        self.name = function
 
+    # -   -  -  - - ---= SPELLS =--- - -  -  -   - #
     def regenerate(self, data):
         # Check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                        # FILLER cooldown.
 
@@ -26,14 +28,14 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
-        print(1, self.cast)
+        print(1, self.use)
         end_turn()
 
     def empower(self, data):
         # Grant effect.
-        data[2].status.append(empowered)
+        data[2].status.append(Effect(0, "empowered", True))
         self.cooldown = 999
-        print(2, self.cast)
+        print(2, self.use)
         end_turn()
 
     def lightning(self, data):
@@ -41,24 +43,26 @@ class Spell:
         target = find_target(data[1])
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                        # FILLER cooldown.
 
         # deal damage,
-            target.health -= 15                         # FILLER damage.
+            target.health -= 20                         # FILLER damage.
         else:
-            target.health -= 10                         # FILLER damage.
+            target.health -= 15                         # FILLER damage.
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
-        print(3, self.cast)
+        print(3, self.use)
         end_turn()
 
     def elemental_volley(self, data):
         shards = 3
         # Check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                        # FILLER cooldown.
             shards = 5
@@ -79,7 +83,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
-        print(4, self.cast)
+        print(4, self.use)
         end_turn()
 
     def foresight(self, data):
@@ -87,7 +91,8 @@ class Spell:
         data[2].status.append(Effect("?", "foresight_effect", 4))
 
         # Check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -109,7 +114,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
-        print(5, self.cast)
+        print(5, self.use)
         end_turn()
 
     def stasis(self, data):
@@ -125,7 +130,8 @@ class Spell:
         target.status.append(Effect(0, "stasis_effect", 2))
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
             cd = 2                                       # FILLER cooldown.
@@ -134,20 +140,21 @@ class Spell:
 
         # start cooldown.
         self.cooldown = cd
-        print(6, self.cast)
+        print(6, self.use)
         end_turn()
 
     def agility(self, data):
         # Passive, increases speed,
         # should always be disabled, no effect.
-        print(7, self.cast)
+        print(7, self.use)
 
     def weaken(self, data):
         # obtain target,
         target = find_target(data[1])
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -165,7 +172,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = cd
-        print(8, self.cast)
+        print(8, self.use)
         end_turn()
 
     def fireball(self, data):
@@ -173,7 +180,8 @@ class Spell:
         target = find_target(data[1])
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -188,17 +196,18 @@ class Spell:
 
         # start cooldown.
         self.cooldown = cd
-        print(9, self.cast)
+        print(9, self.use)
         end_turn()
 
     def stamina(self, data):
         # Passive, increases max_stamina,
         # should always be disabled, no effect.
-        print(10, self.cast)
+        print(10, self.use)
 
     def whirlwind(self, data):
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -211,28 +220,30 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
-        print(11, self.cast)
+        print(11, self.use)
         end_turn()
 
     def enchant_weapon(self, data):
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
         # Grant effect,
-            data[2].status.append(enchanted_weapon_empowered)
+            data[2].status.append(Effect("attacking", "enchanted_weapon_empowered", True))
         else:
-            data[2].status.append(enchanted_weapon)
+            data[2].status.append(Effect("attacking", "enchanted_weapon", True))
 
         # start cooldown.
         self.cooldown = 999                               # FILLER cooldown.
-        print(12, self.cast)
+        print(12, self.use)
         end_turn()
 
     def recover(self, data):
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -252,7 +263,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                                 # FILLER cooldown.
-        print(13, self.cast)
+        print(13, self.use)
         end_turn()
 
     def venom(self, data):
@@ -260,7 +271,8 @@ class Spell:
         target = find_target(data[1])
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -271,25 +283,26 @@ class Spell:
 
         # start cooldown
         self.cooldown = 3                                # FILLER cooldown.
-        print(14, self.cast)
+        print(14, self.use)
         end_turn()
 
     def focus(self, data):
         # passive, decreases spell and item cooldown,
         # should always be disabled.
-        print(15, self.cast)
+        print(15, self.use)
 
     def calm(self, data):                               # Actions not yet defined.
         # check empowered,
         # obtain target,
         # skip actions,
         # start cooldown.
-        print(16, self.cast)
+        print(16, self.use)
         end_turn()
 
     def heal(self, data):
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -304,7 +317,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
-        print(17, self.cast)
+        print(17, self.use)
         end_turn()
 
     def barrier(self, data):
@@ -312,7 +325,8 @@ class Spell:
         data[2].status.append(Effect("?", "barrier_effect", 4))
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -325,24 +339,45 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
-        print(18, self.cast)
+        print(18, self.use)
         end_turn()
 
-    def chaotic_strike(self, data):                      # Stamina not yet defined.
-        # check stamina requirement,
+    def chaotic_strike(self, data):
         # check empowered,
-        # obtain target,
-        # deal damage to target,
-        # take stamina.
-        print(19, self.cast)
-        end_turn()
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
+            data[2].status.remove(empowered)
+            empower.cooldown = 3            # FILLER cooldown.
+
+            damage = 25                     # FILLER damage.
+            stamina_req = 12                # FILLER stamina.
+            stamina_cost = 8                # FILLER stamina.
+        else:
+            damage = 18                     # FILLER damage.
+            stamina_req = 14                # FILLER stamina.
+            stamina_cost = 10               # FILLER stamina.
+
+        # check stamina requirement,
+        if data[2].stamina >= stamina_req:
+
+            # obtain target,
+            target = find_target(data[1])
+
+            # deal damage to target,
+            target.health -= damage
+
+            # take stamina.
+            data[2].stamina -= stamina_cost
+            print(19, self.use)
+            end_turn()
 
     def siphon(self, data):
         # obtain target,
         target = find_target(data[1])
 
         # check empowered,
-        if empowered in data[2].status:
+        empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
+        if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
@@ -362,7 +397,7 @@ class Spell:
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown
-        print(20, self.cast)
+        print(20, self.use)
         end_turn()
 
     def slow_time(self, data):
@@ -376,36 +411,50 @@ class Spell:
 
         # set double turn to True,
         # start cooldown, start effect duration. { or not }
-        print(21, self.cast)
+        print(21, self.use)
+        end_turn()
+
+    # -   -  -  - - ---= ITEMS =--- - -  -  -   - #
+    def health_potion(self, data):
+        data[2].health += 15
+        if data[2].health > data[2].max_health:
+            data[2].health = data[2].max_health
+        data[2].inventory.remove(self)
+        self.cooldown = 3
+
         end_turn()
 
 
-regenerate = Spell("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
-empower = Spell("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
-lightning = Spell("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))
+# Spells
+regenerate = Action("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
+empower = Action("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
+lightning = Action("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))
 
-elemental_volley = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))
-foresight = Spell("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))
+elemental_volley = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))
+foresight = Action("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))
 
-stasis = Spell("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))
-agility = Spell("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))
-weaken = Spell("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))
+stasis = Action("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))
+agility = Action("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))
+weaken = Action("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))
 
-fireball = Spell("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))
+fireball = Action("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))
 
-stamina = Spell("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))
-whirlwind = Spell("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))
-enchant_weapon = Spell("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))
+stamina = Action("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))
+whirlwind = Action("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))
+enchant_weapon = Action("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))
 
-recover = Spell("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))
-venom = Spell("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))
+recover = Action("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))
+venom = Action("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))
 
-focus = Spell("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))
-calm = Spell("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))
-heal = Spell("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))
+focus = Action("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))
+calm = Action("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))
+heal = Action("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))
 
-barrier = Spell("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))
+barrier = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))
 
-chaotic_strike = Spell("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))
-siphon = Spell("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))
-slow_time = Spell("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))
+chaotic_strike = Action("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))
+siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))
+slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))
+
+# Items
+health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(6, 6))

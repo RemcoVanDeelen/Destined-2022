@@ -9,7 +9,6 @@ def end_turn():  # function for ending turns, spell in put is after this because
     place_main()
     for button in placed_buttons:
         button.configure(state="disabled")
-    # data[1][0].health -= 10
 
     in_turn.set(1)
 
@@ -87,7 +86,7 @@ def place_spells():
     placed_buttons = []
 
     for spell in data[2].spells:
-        button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=spell: _.cast(data))
+        button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=spell: _.use(data))
         button.place(x=1920/(len(data[2].spells)+1)*(data[2].spells.index(spell)+1)-48*3, y=845)
 
         if spell.cooldown > 0:
@@ -106,7 +105,10 @@ def place_bag():
     temp_y = 1
     for item in data[2].inventory:
         button = Button(scr, image=item.image, borderwidth=0, highlightthickness=0,
-                        activebackground="#31486F", command=lambda _=item: _.function)
+                        activebackground="#31486F", command=lambda _=item: _.use(data))
+
+        if item.cooldown > 0:
+            button.configure(state="disabled")
 
         temp_y += 1
         if data[2].inventory.index(item) % 3 == 0:
@@ -146,7 +148,8 @@ def light_attack():
             if status_effect.duration == 0:
                 data[2].status.remove(status_effect)
                 if status_effect.effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:
-                    next((spell for spell in data[2].spells if spell.name == "empower"), None).cooldown = 3          # FILLER cooldown.
+                    _ = next((spell for spell in data[2].spells if spell.name == "empower"), None)
+                    _.cooldown = 3          # FILLER cooldown.
 
     target.health -= damage
     data[2].stamina -= 5                # FILLER stamina cost.
@@ -165,7 +168,8 @@ def heavy_attack():
             if status_effect.duration == 0:
                 data[2].status.remove(status_effect)
                 if status_effect.effect in ["enchanted_weapon", "enchanted_weapon"]:
-                    next((spell for spell in data[2].spells if spell.name == "empower"), None).cooldown = 3          # FILLER cooldown.
+                    _ = next((spell for spell in data[2].spells if spell.name == "empower"), None)
+                    _.cooldown = 3                                             # FILLER cooldown.
 
     target.health -= damage
     data[2].stamina -= 8                        # FILLER stamina cost.
@@ -202,13 +206,15 @@ def battle(players: list[Player], enemies: list[Foe], location):
     global data
     place_bg(location)
     players[0].room.unload()
-    players[0].health_label = Label(scr, text=players[0].health)
+    players[0].health_label = Label(scr, text="HP="+str(players[0].health))
     players[0].health_label.place(x=50, y=1080 // 4 * 3 - 130)
+    players[0].stamina_label = Label(scr, text="STA="+str(players[0].stamina))
+    players[0].stamina_label.place(x=100, y=1080 // 4 * 3 - 130)
 
     for foe in enemies:
         foe.image = Button(scr, image=foe.display, command=lambda _=foe: print(_.name), border=0, highlightthickness=0, activebackground="#000000", bg="#000000")
         foe.image.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50)
-        foe.health_label = Label(scr, text=foe.health)
+        foe.health_label = Label(scr, text="HP="+str(foe.health))
         foe.health_label.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50+96*2.5)
 
     # Decide turn order:
@@ -277,6 +283,13 @@ def battle(players: list[Player], enemies: list[Foe], location):
                 for spell in battler.spells:
                     if spell.cooldown > 0:
                         spell.cooldown -= 1
+
+                checked_items = []
+                for item in battler.inventory:
+                    if item.cooldown > 0:
+                        if item not in checked_items:
+                            item.cooldown -= 1
+                            checked_items.append(item)
                 scr.wait_variable(in_turn)
 
             battler.turn(data)
@@ -298,7 +311,10 @@ def battle(players: list[Player], enemies: list[Foe], location):
                     status_effect.tick([living_players, living_foe, battler])
                     if status_effect.duration == 0:
                         battler.status.remove(status_effect)
-            battler.health_label.configure(text=battler.health)
+            battler.health_label.configure(text="HP="+str(battler.health))
+            if battler in living_players:
+                battler.stamina_label.configure(text="STA=" + str(battler.stamina))
+
             if battler.health <= 0:
                 if battler in living_foe:
                     living_foe.remove(battler)
