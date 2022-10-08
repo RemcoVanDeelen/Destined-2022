@@ -1,4 +1,5 @@
 from random import randint
+from tkinter import PhotoImage
 
 
 class Foe:
@@ -32,7 +33,6 @@ class Foe:
                 percent.append(move)
         rng = randint(0, len(percent))
         percent[rng-1].function(_data, percent[rng-1])
-        print(self.name, percent[rng-1].type)
 
 
 class Move:
@@ -45,7 +45,7 @@ class Move:
 
 def harm(battle_data, move_data):
     targets = sorted(battle_data[0], key=lambda _: _.health)
-    targets[0].health -= 4 * move_data.effect_multiplier
+    deal_damage(attacker=battle_data[2], target=targets[0], exact_damage=4*move_data.effect_multiplier)
 
 
 def heal_ally(battle_data, move_data):
@@ -64,7 +64,6 @@ attack2 = Move("damage", 50, 1, harm)
 heal = Move("heal-ally", 50, 5, heal_ally)
 skip = Move("skip", 100, 5, _skip)
 
-from tkinter import PhotoImage
 foe_img = PhotoImage(file="images/Battle_GUI/FoeTest.png").zoom(5, 5).subsample(2, 2)
 dummy_img = PhotoImage(file="images/Battle_GUI/Enemies/Dummy_foe.png").zoom(5, 5).subsample(2, 2)
 
@@ -72,3 +71,4 @@ Test_foe1 = Foe(8, 20, 0, 5, [attack], "TEST_FOE_NAME1", foe_img)
 Test_foe2 = Foe(12, 15, 10, 5, [attack2, heal], "TEST_FOE_NAME2", foe_img)
 Test_foe3 = Foe(5, 25, 0, 5, [attack], "TEST_FOE_NAME3", foe_img)
 Dummy = Foe(4, 999, 0, 0, [skip], "DUMMY_FOE", dummy_img)
+from Battle import deal_damage

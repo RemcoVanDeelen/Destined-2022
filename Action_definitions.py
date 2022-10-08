@@ -519,17 +519,17 @@ siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButto
 slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))                         # 21
 
 # Items
-health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                    # A
-large_health_potion = Action("large_health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                        # B
+health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Health_potion.png").zoom(2, 2))                                    # A
+large_health_potion = Action("large_health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Health_potion.png").zoom(2, 2))                  # B
 
-stamina_potion = Action("stamina_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                  # C
-large_stamina_potion = Action("large_stamina_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                      # D
+stamina_potion = Action("stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Stamina_potion.png").zoom(2, 2))                                 # C
+large_stamina_potion = Action("large_stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Stamina_potion.png").zoom(2, 2))               # D
 
-strength_potion = Action("strength_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                # E
+strength_potion = Action("strength_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Strength_potion.png").zoom(2, 2))                              # E
 
-vitality_potion = Action("vitality_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                # F
+vitality_potion = Action("vitality_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Vitality_potion.png").zoom(2, 2))                              # F
 
-shield_potion = Action("shield_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                    # G
-resistance_potion = Action("resistance_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                            # H
+shield_potion = Action("shield_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Shield_potion.png").zoom(2, 2))                                    # G
+resistance_potion = Action("resistance_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Resistance_potion.png").zoom(2, 2))                        # H
 
-staminaless_potion = Action("staminaless_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                          # I
+staminaless_potion = Action("staminaless_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Staminaless_potion.png").zoom(2, 2))                     # I

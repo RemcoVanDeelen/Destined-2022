@@ -31,6 +31,56 @@ def find_target(targets):
     return targets[target_index.get()]
 
 
+def deal_damage(attacker=None, target=None, is_melee=True, exact_damage=0, percent_damage=0):
+    base_damage = exact_damage + (target.max_health / 100 * percent_damage)
+
+    pre_addition = 0
+    dmg_multiplier = 1
+    post_addition = 0
+
+    # Attacker effects:
+    for status_effect in attacker.status:
+        if is_melee:                                                            # The following effects are only for melee attacks.
+            if status_effect.effect in ["enchanted_weapon"]:                    # Checks for attacker effects that add DMG values after multiplier.
+                post_addition += status_effect.tick(data)
+            elif status_effect.effect in ["enchanted_weapon_empowered"]:        # Checks for attacker effects that add DMG values before multiplier.
+                pre_addition += status_effect.tick(data)
+            elif status_effect.effect in ["strength"]:                          # Checks for attacker effects that affect the DMG multiplier.
+                dmg_multiplier += status_effect.tick(data)
+
+            if status_effect.duration == 0:
+                attacker.status.remove(status_effect)                           # Removes effects that are no longer in effect.
+
+                if status_effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:     # Sets cooldown for Enchant_weapon Spell in needs be.
+                    _ = next((spell for spell in attacker.spells if spell.name == "enchant_weapon"), None)
+                    _.cooldown = 3  # FILLER cooldown
+
+    # Target effects:
+    for status_effect in target.status:
+        if status_effect.effect in ["defending", "resistance", "weakened"]:     # Checks for target effects that affect the DMG multiplier.
+            dmg_multiplier -= status_effect.tick(data)
+        elif status_effect.effect in ["shielded"]:                              # Checks if target can be damaged this turn. (shielded effect)
+            dmg_multiplier = 0
+            post_addition = 0
+            base_damage = 0
+            pre_addition = 0
+            status_effect.tick(data)
+
+        if status_effect.duration == 0:
+            target.status.remove(status_effect)                                 # Removes effects that are no longer in effect.
+
+    # total damage calculation:
+    damage = round((base_damage + pre_addition) * dmg_multiplier + post_addition)
+    target.health -= damage                                                     # Deals damage.
+
+    try:                                          # Temporary statement.
+        print("=", attacker.tag, "dealt", [damage], "damage to", target.name)
+    except AttributeError:
+        print("-", attacker.name, "dealt", [damage], "damage to", target.tag)
+
+    return damage
+
+
 # imagery:
 img_fight_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Fight.png").zoom(6, 6)
 img_magic_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Magic.png").zoom(6, 6)
@@ -161,53 +211,6 @@ def heavy_attack():
     end_turn()
 
 
-def deal_damage(attacker=None, target=None, is_melee=True, exact_damage=0, percent_damage=0):
-    base_damage = exact_damage + (target.max_health / 100 * percent_damage)
-
-    pre_addition = 0
-    dmg_multiplier = 1
-    post_addition = 0
-
-    # Attacker effects:
-    for status_effect in attacker.status:
-        if is_melee:                                                            # The following effects are only for melee attacks.
-            if status_effect.effect in ["enchanted_weapon"]:                    # Checks for attacker effects that add DMG values after multiplier.
-                post_addition += status_effect.tick(data)
-            elif status_effect.effect in ["enchanted_weapon_empowered"]:        # Checks for attacker effects that add DMG values before multiplier.
-                pre_addition += status_effect.tick(data)
-            elif status_effect.effect in ["strength"]:                          # Checks for attacker effects that affect the DMG multiplier.
-                dmg_multiplier += status_effect.tick(data)
-
-            if status_effect.duration == 0:
-                attacker.status.remove(status_effect)                           # Removes effects that are no longer in effect.
-
-                if status_effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:     # Sets cooldown for Enchant_weapon Spell in needs be.
-                    _ = next((spell for spell in attacker.spells if spell.name == "enchant_weapon"), None)
-                    _.cooldown = 3  # FILLER cooldown
-
-    # Target effects:
-    for status_effect in target.status:
-        if status_effect.effect in ["defending", "resistance", "weakened"]:     # Checks for target effects that affect the DMG multiplier.
-            dmg_multiplier -= status_effect.tick(data)
-        elif status_effect.effect in ["shielded"]:                              # Checks if target can be damaged this turn. (shielded effect)
-            dmg_multiplier = 0
-            post_addition = 0
-            base_damage = 0
-            pre_addition = 0
-            status_effect.tick(data)
-
-        if status_effect.duration == 0:
-            target.status.remove(status_effect)                                 # Removes effects that are no longer in effect.
-
-    # total damage calculation:
-    damage = round((base_damage + pre_addition) * dmg_multiplier + post_addition)
-    target.health -= damage                                                     # Deals damage.
-
-    print("Damage dealt =", damage)                 # Temporary statement.
-
-    return damage
-
-
 # = Main button creation and placement =
 fight_button = Button(scr, image=img_fight_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_attack)
 magic_button = Button(scr, image=img_magic_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=place_spells)
@@ -282,14 +285,25 @@ def battle(players: list[Player], enemies: list[Foe], location):
     turn = 0
     turn_total = 0
 
+    print("\n - Battle start -",
+          "\n Players: ", end="")
+    for _ in players:
+        print(_.tag, end=",")
+    print("\n Enemies: ", end="")
+    for _ in enemies:
+        print(_.name, end=", ")
+    print("\n")
+
     while len(living_players) > 0 and len(living_foe) > 0:
         battler = turn_order[turn]
         turn += 1
         turn_total += 1
         if turn >= len(turn_order):
             turn = 0
+        print("/", turn_total, "\\")
 
         if battler.health <= 0:
+            print(battler.name, "is dead")
             continue
 
         data = [living_players, living_foe, battler]
@@ -355,6 +369,8 @@ def battle(players: list[Player], enemies: list[Foe], location):
                     living_players.remove(battler)
 
         win.update_idletasks()
+
+    print("\n - Battle concluded -")
     players[0].room.load()
     for player in players:
         scr.tag_raise(player.disp.tag)
