@@ -13,8 +13,18 @@ Room_1.load()
 scr.tag_raise(Player1.tag)
 # Player1 = Player("Player1")        moved to = Test_room_definitions.py =
 Player1.room = Room_1
-Player1.spells = [empower, heal, chaotic_strike, lightning, fireball]
-Player1.inventory = [health_potion, health_potion]
+Player1.spells = [empower, elemental_volley, siphon, weaken, enchant_weapon]
+Player1.inventory = [
+    health_potion,
+    large_health_potion,
+    stamina_potion,
+    large_stamina_potion,
+    strength_potion,
+    vitality_potion,
+    shield_potion,
+    resistance_potion,
+    staminaless_potion
+]
 Player1.disp.roll()
 
 win.bind("<w>", Player1.move)

@@ -45,6 +45,7 @@ class Effect:
 
     def weakened(self, data):
         self.duration -= 1
+        return -0.25
 
     def burning(self, data):
         data[2].health -= 4                         # FILLER damage (should be %).
@@ -61,6 +62,22 @@ class Effect:
     def stasis_effect(self, data):
         self.duration -= 1
 
+    def strength(self, data):                       # FILLER function.
+        self.duration -= 1
+        return 0.2
+
+    def shielded(self, data):                       # FILLER function.
+        self.duration -= 1
+
+    def resistance(self, data):                       # FILLER function.
+        self.duration -= 1
+
+    def staminaless(self, data):                       # FILLER function.
+        self.duration -= 1
+
+    def defending(self, data):
+        return 0.3
+
 
 '''
 empowered = Effect(0, "empowered", True)
@@ -71,8 +88,8 @@ regenerating_empowered = Effect("start", "regenerating_empowered", 3)
 foresight_effect = Effect("?", "foresight_effect", 4)          # FILLER function < and v both.
 opponent_foresight_effect = Effect("?", "opponent_foresight_effect", 4)
 
-enchanted_weapon = Effect("attacking", "enchanted_weapon", True)
-enchanted_weapon_empowered = Effect("attacking", "enchanted_weapon_empowered", True)
+enchanted_weapon = Effect("attacking", "enchanted_weapon", 2)
+enchanted_weapon_empowered = Effect("attacking", "enchanted_weapon_empowered", 2)
 
 barrier_effect = Effect("?", "barrier_effect", 4)
 opponent_barrier_effect = Effect("?", "opponent_barrier_effect", 4)
@@ -86,4 +103,12 @@ venom_effect = Effect("end", "venom", 3)
 venom_effect_empowered = Effect("always", "venom_empowered", 3)
 
 stasis_effect = Effect(0, "stasis_effect", 2)
+
+Effect("attacking", "strength", 4)
+
+Effect("attacked", "shielded", 3)
+
+Effect("attacked", "resistance", 5)
+
+Effect("end", "staminaless", 5)
 '''  # Effect examples

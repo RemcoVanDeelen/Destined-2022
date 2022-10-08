@@ -1,6 +1,6 @@
 from Core import *
 from random import randint
-from Battle import end_turn, find_target
+from Battle import end_turn, find_target, deal_damage
 from Status_effects import *
 
 
@@ -49,9 +49,9 @@ class Action:
             empower.cooldown = 3                        # FILLER cooldown.
 
         # deal damage,
-            target.health -= 20                         # FILLER damage.
+            deal_damage(attacker=data[2], target=target, exact_damage=10, percent_damage=6, is_melee=False)
         else:
-            target.health -= 15                         # FILLER damage.
+            deal_damage(attacker=data[2], target=target, exact_damage=8, percent_damage=4, is_melee=False)
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
@@ -71,15 +71,15 @@ class Action:
         # define the shards,
         for shard in range(0, shards):
             if randint(0, 1) == 1:
-                shard = 8                               # FILLER damage.
+                shard = [6, 7]
             else:
-                shard = 4                               # FILLER damage.
+                shard = [4, 5]
             shard_list.append(shard)
 
         # deal damage to random targets,
         for shard in shard_list:
             target = data[1][randint(0, len(data[1])-1)]
-            target.health -= shard
+            deal_damage(attacker=data[2], target=target, is_melee=False, exact_damage=shard[0], percent_damage=shard[1])
 
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
@@ -158,14 +158,11 @@ class Action:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
-            dmg = 8                                     # FILLER damage.
+            deal_damage(attacker=data[2], target=target, exact_damage=3, percent_damage=4, is_melee=False)
             cd = 2                                      # FILLER cooldown.
         else:
-            dmg = 5                                     # FILLER damage.
+            deal_damage(attacker=data[2], target=target, exact_damage=2, percent_damage=3, is_melee=False)
             cd = 3                                      # FILLER cooldown.
-
-        # damage target,
-        target.health -= dmg
 
         # Grant effect
         target.status.append(Effect("end", "weakened", 4)),
@@ -189,10 +186,11 @@ class Action:
             target.status.append(Effect("end", "burning", 3))
             cd = 1                                       # FILLER cooldown.
 
-        # damage target,
         else:
-            target.health -= 6                           # FILLER damage.
             cd = 2                                       # FILLER cooldown.
+
+        # deal damage,
+        deal_damage(attacker=data[2], target=target, exact_damage=5, percent_damage=6, is_melee=False)
 
         # start cooldown.
         self.cooldown = cd
@@ -213,10 +211,10 @@ class Action:
 
         # damage all opponents,
             for foe in data[1]:
-                foe.health -= 20                         # FILLER damage.
+                deal_damage(attacker=data[2], target=foe, exact_damage=8, percent_damage=14, is_melee=False)
         else:
             for foe in data[1]:
-                foe.health -= 10                         # FILLER damage.
+                deal_damage(attacker=data[2], target=foe, exact_damage=5, percent_damage=10, is_melee=False)
 
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
@@ -231,12 +229,12 @@ class Action:
             empower.cooldown = 3                         # FILLER cooldown.
 
         # Grant effect,
-            data[2].status.append(Effect("attacking", "enchanted_weapon_empowered", True))
+            data[2].status.append(Effect("attacking", "enchanted_weapon_empowered", 2))
         else:
-            data[2].status.append(Effect("attacking", "enchanted_weapon", True))
+            data[2].status.append(Effect("attacking", "enchanted_weapon", 2))
 
         # start cooldown.
-        self.cooldown = 999                               # FILLER cooldown.
+        self.cooldown = 999
         print(12, self.use)
         end_turn()
 
@@ -342,18 +340,20 @@ class Action:
         print(18, self.use)
         end_turn()
 
-    def chaotic_strike(self, data):
+    def chaotic_strike(self, data):         # FILLER Function, should be disabled when stamina_req not met, should not consume empowered unless used.
         # check empowered,
         empowered = next((_ for _ in data[2].status if _.effect == "empowered"), None)
         if empowered is not None:
             data[2].status.remove(empowered)
             empower.cooldown = 3            # FILLER cooldown.
 
-            damage = 25                     # FILLER damage.
+            dmg = 18
+            pct_dmg = 10
             stamina_req = 12                # FILLER stamina.
             stamina_cost = 8                # FILLER stamina.
         else:
-            damage = 18                     # FILLER damage.
+            dmg = 15
+            pct_dmg = 8
             stamina_req = 14                # FILLER stamina.
             stamina_cost = 10               # FILLER stamina.
 
@@ -364,7 +364,7 @@ class Action:
             target = find_target(data[1])
 
             # deal damage to target,
-            target.health -= damage
+            deal_damage(attacker=data[2], target=target, is_melee=False, exact_damage=dmg, percent_damage=pct_dmg)
 
             # take stamina.
             data[2].stamina -= stamina_cost
@@ -381,17 +381,12 @@ class Action:
             data[2].status.remove(empowered)
             empower.cooldown = 3                         # FILLER cooldown.
 
-            dmg = 15                                    # FILLER damage.
-            healing = 15                                   # FILLER healing (should be %).
+            healing = deal_damage(attacker=data[2], target=target, is_melee=False, exact_damage=10, percent_damage=5)
         else:
-            dmg = 10                                    # FILLER damage.
-            healing = 8                                    # FILLER healing (should be %).
-
-        # deal damage to target,
-        target.health -= dmg
+            healing = deal_damage(attacker=data[2], target=target, is_melee=False, exact_damage=8, percent_damage=5) * 0.8
 
         # heal caster,
-        data[2].health += healing
+        data[2].health += round(healing)
         if data[2].health > data[2].max_health:
             data[2].health = data[2].max_health
 
@@ -420,41 +415,121 @@ class Action:
         if data[2].health > data[2].max_health:
             data[2].health = data[2].max_health
         data[2].inventory.remove(self)
-        self.cooldown = 3
+        self.cooldown = 3                           # FILLER cooldown.
 
+        end_turn()
+
+    def large_health_potion(self, data):
+        data[2].health += 30
+        if data[2].health > data[2].max_health:
+            data[2].health = data[2].max_health
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    def stamina_potion(self, data):
+        data[2].stamina += 8
+        if data[2].stamina > data[2].max_stamina:
+            data[2].stamina = data[2].max_stamina
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    def large_stamina_potion(self, data):
+        data[2].stamina += 15
+        if data[2].stamina > data[2].max_stamina:
+            data[2].stamina = data[2].max_stamina
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    def strength_potion(self, data):
+        data[2].status.append(Effect("attacking", "strength", 4))
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    def vitality_potion(self, data):
+        data[2].health += 5
+        data[2].max_health += 5
+        data[2].inventory.remove(self)
+
+        end_turn()
+
+    def shield_potion(self, data):
+        data[2].status.append(Effect("attacked", "shielded", 3))
+        data[2].inventory.remove(self)
+        self.cooldown = 5                           # FILLER cooldown.
+
+        end_turn()
+
+    def resistance_potion(self, data):
+        data[2].status.append(Effect("attacked", "resistance", 5))
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    def staminaless_potion(self, data):
+        data[2].status.append(Effect("end", "staminaless", 5))
+        data[2].inventory.remove(self)
+        self.cooldown = 3                           # FILLER cooldown.
+
+        end_turn()
+
+    # -   -  -  - - ---= ACTIONS =--- - -  -  -   - #
+    def defend(self, data):
+        data[2].status.append(Effect("start", "defending", 1))
         end_turn()
 
 
 # Spells
-regenerate = Action("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))
-empower = Action("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))
-lightning = Action("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))
+regenerate = Action("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))                       # 1
+empower = Action("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))                                # 2
+lightning = Action("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))                          # 3
 
-elemental_volley = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))
-foresight = Action("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))
+elemental_volley = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))     # 4
+foresight = Action("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))                          # 5
 
-stasis = Action("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))
-agility = Action("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))
-weaken = Action("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))
+stasis = Action("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))                                   # 6
+agility = Action("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))                                # 7
+weaken = Action("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))                                   # 8
 
-fireball = Action("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))
+fireball = Action("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))                             # 9
 
-stamina = Action("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))
-whirlwind = Action("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))
-enchant_weapon = Action("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))
+stamina = Action("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))                               # 10
+whirlwind = Action("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))                         # 11
+enchant_weapon = Action("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))          # 12
 
-recover = Action("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))
-venom = Action("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))
+recover = Action("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))                               # 13
+venom = Action("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))                                     # 14
 
-focus = Action("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))
-calm = Action("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))
-heal = Action("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))
+focus = Action("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))                                     # 15
+calm = Action("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))                                        # 16
+heal = Action("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))                                        # 17
 
-barrier = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))
+barrier = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))                      # 18
 
-chaotic_strike = Action("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))
-siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))
-slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))
+chaotic_strike = Action("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))          # 19
+siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))                                  # 20
+slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))                         # 21
 
 # Items
-health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(6, 6))
+health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                    # A
+large_health_potion = Action("large_health_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                        # B
+
+stamina_potion = Action("stamina_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                  # C
+large_stamina_potion = Action("large_stamina_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                      # D
+
+strength_potion = Action("strength_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                # E
+
+vitality_potion = Action("vitality_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                # F
+
+shield_potion = Action("shield_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                                    # G
+resistance_potion = Action("resistance_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                            # H
+
+staminaless_potion = Action("staminaless_potion", PhotoImage(file="images/Battle_GUI/ButtonTest-Item.png").zoom(4, 4))                          # I

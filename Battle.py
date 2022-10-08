@@ -45,6 +45,8 @@ img_light_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Light_at
 img_battle_frame = PhotoImage(file="images/Battle_GUI/BattleMenuTest.png").zoom(5, 5)
 img_text_label_frame = PhotoImage(file="images/Battle_GUI/TextLabelTest.png").zoom(5, 5)
 
+pointer_img = PhotoImage(file="images/Battle_GUI/item_pointer.png").zoom(5, 5)
+
 # Global list definitions (need to be moved to other location):
 placed_buttons = []
 data = []
@@ -99,10 +101,12 @@ def place_bag():
     global placed_buttons, data
     for child in placed_buttons:
         child.place_forget()
-    placed_buttons = []
+
+    pointer = scr.create_image(-100, -100, image=pointer_img, tag="pointer")
 
     temp_x = 0
     temp_y = 1
+    item_index = 0
     for item in data[2].inventory:
         button = Button(scr, image=item.image, borderwidth=0, highlightthickness=0,
                         activebackground="#31486F", command=lambda _=item: _.use(data))
@@ -111,17 +115,24 @@ def place_bag():
             button.configure(state="disabled")
 
         temp_y += 1
-        if data[2].inventory.index(item) % 3 == 0:
+        if item_index % 3 == 0:
             temp_x += 1
             temp_y = 1
         button.place(x=temp_x * 77 * 6 - 72 * 6 + 120, y=temp_y * 16 * 6 - 16 * 6 + 760)
+
+        button.bind("<Enter>", lambda bound, x=temp_x, y=temp_y: scr.moveto(pointer, x=x*460-10, y=y*97+675))
+        button.bind("<Leave>", lambda bound, x=temp_x, y=temp_y: scr.moveto(pointer, x=-100, y=-100))
         placed_buttons.append(button)
+        item_index += 1
 
 
 def place_main():
     global placed_buttons
     for child in placed_buttons:
-        child.place_forget()
+        try:
+            child.place_forget()
+        except AttributeError:
+            scr.delete(child)
     placed_buttons = [fight_button, magic_button, bag_button, action_button]
     fight_button.place(x=1920 / 5 - 48 * 3, y=845)
     magic_button.place(x=1920 / 5 * 2 - 48 * 3, y=845)
@@ -138,43 +149,63 @@ def place_actions():
 
 # melee attack functions
 def light_attack():
-    target = find_target(data[1])
-    damage = 7                                              # FILLER damage.
-    for status_effect in data[2].status:
-        if status_effect.time == "attacking":
-            value = status_effect.tick(data)
-            if status_effect.effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:
-                damage += value
-            if status_effect.duration == 0:
-                data[2].status.remove(status_effect)
-                if status_effect.effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:
-                    _ = next((spell for spell in data[2].spells if spell.name == "empower"), None)
-                    _.cooldown = 3          # FILLER cooldown.
-
-    target.health -= damage
-    data[2].stamina -= 5                # FILLER stamina cost.
-
+    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=7)  # FILLER damage.
+    data[2].stamina -= 6                        # FILLER stamina cost.
     end_turn()
 
 
 def heavy_attack():
-    target = find_target(data[1])
-    damage = 12                                              # FILLER damage.
-    for status_effect in data[2].status:
-        if status_effect.time == "attacking":
-            value = status_effect.tick(data)
-            if status_effect.effect in ["enchanted_weapon", "enchanted_weapon"]:
-                damage += value
-            if status_effect.duration == 0:
-                data[2].status.remove(status_effect)
-                if status_effect.effect in ["enchanted_weapon", "enchanted_weapon"]:
-                    _ = next((spell for spell in data[2].spells if spell.name == "empower"), None)
-                    _.cooldown = 3                                             # FILLER cooldown.
-
-    target.health -= damage
+    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=12)  # FILLER damage.
     data[2].stamina -= 8                        # FILLER stamina cost.
 
     end_turn()
+
+
+def deal_damage(attacker=None, target=None, is_melee=True, exact_damage=0, percent_damage=0):
+    base_damage = exact_damage + (target.max_health / 100 * percent_damage)
+
+    pre_addition = 0
+    dmg_multiplier = 1
+    post_addition = 0
+
+    # Attacker effects:
+    for status_effect in attacker.status:
+        if is_melee:                                                            # The following effects are only for melee attacks.
+            if status_effect.effect in ["enchanted_weapon"]:                    # Checks for attacker effects that add DMG values after multiplier.
+                post_addition += status_effect.tick(data)
+            elif status_effect.effect in ["enchanted_weapon_empowered"]:        # Checks for attacker effects that add DMG values before multiplier.
+                pre_addition += status_effect.tick(data)
+            elif status_effect.effect in ["strength"]:                          # Checks for attacker effects that affect the DMG multiplier.
+                dmg_multiplier += status_effect.tick(data)
+
+            if status_effect.duration == 0:
+                attacker.status.remove(status_effect)                           # Removes effects that are no longer in effect.
+
+                if status_effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:     # Sets cooldown for Enchant_weapon Spell in needs be.
+                    _ = next((spell for spell in attacker.spells if spell.name == "enchant_weapon"), None)
+                    _.cooldown = 3  # FILLER cooldown
+
+    # Target effects:
+    for status_effect in target.status:
+        if status_effect.effect in ["defending", "resistance", "weakened"]:     # Checks for target effects that affect the DMG multiplier.
+            dmg_multiplier -= status_effect.tick(data)
+        elif status_effect.effect in ["shielded"]:                              # Checks if target can be damaged this turn. (shielded effect)
+            dmg_multiplier = 0
+            post_addition = 0
+            base_damage = 0
+            pre_addition = 0
+            status_effect.tick(data)
+
+        if status_effect.duration == 0:
+            target.status.remove(status_effect)                                 # Removes effects that are no longer in effect.
+
+    # total damage calculation:
+    damage = round((base_damage + pre_addition) * dmg_multiplier + post_addition)
+    target.health -= damage                                                     # Deals damage.
+
+    print("Damage dealt =", damage)                 # Temporary statement.
+
+    return damage
 
 
 # = Main button creation and placement =
@@ -203,6 +234,7 @@ def battle(players: list[Player], enemies: list[Foe], location):
         players[0].health = 1
 
     # Battle display prep
+
     global data
     place_bg(location)
     players[0].room.unload()

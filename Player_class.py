@@ -23,8 +23,8 @@ class Player:
         # Battle statistics:
         self.status = []
         self.damage = 0
-        self.max_health = 20
-        self.health = 20
+        self.max_health = 25
+        self.health = 25
         self.max_stamina = 20
         self.stamina = 20
         self.speed = 10
