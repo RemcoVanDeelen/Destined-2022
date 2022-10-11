@@ -29,6 +29,9 @@ class Player:
         self.stamina = 20
         self.speed = 10
 
+        self.soul = 0
+        self.level = 1
+
         # Movement statistics
         self.checkpoint = [["X", "Y"], "Room"]
         self.position = [1, 1]

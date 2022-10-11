@@ -3,21 +3,20 @@
 ---
 ----- Current goals: -----
 
-* Functioning combat system:
-  * Spells (independent cooldown, unique effect),
-  * Items (Type shared cooldown, simple effect),
-  * Weaponry (Affecting speed, damage, etc.)
-  * Actions (Mostly harmless ways to pacify enemies),
-
-  * Enemy actions and simple Ai,
-
+* Saving to files,
+* Checkpoint system and death consequence,
+* Experience gain and leveling system. (Soul)
 
 ---
 ----- Commit layout: -----
 
-Changed systems:    (+ number of commits with said systems)
+Changed systems:    (+ number of consecutive commits with said systems)
 
 Files with mayor changes:
 
  \- Small description of changes made and goal of changes,
+
+Possible Notes:
+
+Current goal for next Push
  

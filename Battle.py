@@ -365,6 +365,8 @@ def battle(players: list[Player], enemies: list[Foe], location):
                 if battler in living_foe:
                     living_foe.remove(battler)
                     battler.image.configure(state="disabled")
+                    for player in players:
+                        player.soul += battler.soul
                 elif battler in living_players:
                     living_players.remove(battler)
 

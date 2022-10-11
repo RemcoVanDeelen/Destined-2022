@@ -33,7 +33,7 @@ win.bind("<s>", Player1.move)
 win.bind("<a>", Player1.move)
 win.bind("<r>", Player1.interact)
 
-win.bind("<l>", lambda bound: battle([Player1], [Test_foe1, Test_foe3], "TestBackground"))
+win.bind("<l>", lambda bound: battle([Player1], [test_foe1], "TestBackground"))
 
 win.bind("<Escape>", exit)
 win.mainloop()

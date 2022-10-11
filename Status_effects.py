@@ -71,6 +71,7 @@ class Effect:
 
     def resistance(self, data):                       # FILLER function.
         self.duration -= 1
+        return 0.2
 
     def staminaless(self, data):                       # FILLER function.
         self.duration -= 1

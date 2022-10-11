@@ -417,6 +417,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("A", self.use)
         end_turn()
 
     def large_health_potion(self, data):
@@ -426,6 +427,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("B", self.use)
         end_turn()
 
     def stamina_potion(self, data):
@@ -435,6 +437,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("C", self.use)
         end_turn()
 
     def large_stamina_potion(self, data):
@@ -444,6 +447,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("D", self.use)
         end_turn()
 
     def strength_potion(self, data):
@@ -451,6 +455,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("E", self.use)
         end_turn()
 
     def vitality_potion(self, data):
@@ -458,6 +463,7 @@ class Action:
         data[2].max_health += 5
         data[2].inventory.remove(self)
 
+        print("F", self.use)
         end_turn()
 
     def shield_potion(self, data):
@@ -465,6 +471,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 5                           # FILLER cooldown.
 
+        print("G", self.use)
         end_turn()
 
     def resistance_potion(self, data):
@@ -472,6 +479,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("H", self.use)
         end_turn()
 
     def staminaless_potion(self, data):
@@ -479,6 +487,7 @@ class Action:
         data[2].inventory.remove(self)
         self.cooldown = 3                           # FILLER cooldown.
 
+        print("I", self.use)
         end_turn()
 
     # -   -  -  - - ---= ACTIONS =--- - -  -  -   - #
