@@ -1,5 +1,6 @@
-from Test_room_definitions import *
-from Action_definitions import *
+import gc
+
+from Menus import *
 
 '''
 for _ in range(0, 20):
@@ -13,7 +14,7 @@ Room_1.load()
 scr.tag_raise(Player1.tag)
 # Player1 = Player("Player1")        moved to = Test_room_definitions.py =
 Player1.room = Room_1
-Player1.spells = [empower, elemental_volley, siphon, weaken, enchant_weapon]
+Player1.spells = []
 Player1.inventory = [
     health_potion,
     large_health_potion,
@@ -35,5 +36,4 @@ win.bind("<r>", Player1.interact)
 
 win.bind("<l>", lambda bound: battle([Player1], [test_foe1], "TestBackground"))
 
-win.bind("<Escape>", exit)
 win.mainloop()

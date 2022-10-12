@@ -105,7 +105,7 @@ data = []
 # Display functions:
 def place_bg(location):
     scr.bg = PhotoImage(file="images/Backgrounds/"+location+".png").zoom(10, 10)
-    scr.create_image(1920/2, 1080/2, image=scr.bg)
+    scr.create_image(1920/2, 1080/2, image=scr.bg, tag="bg_img")
 
     scr.create_image(15+1890/2, 1080 // 4 * 3 + 80, image=img_battle_frame)
     scr.create_image(15+1890/2, 1080 // 4 * 3 - 130, image=img_text_label_frame)
@@ -388,3 +388,4 @@ def battle(players: list[Player], enemies: list[Foe], location):
         for player in players:
             if child != player.disp:
                 child.place_forget()
+    scr.delete("bg_img")
