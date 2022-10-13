@@ -24,7 +24,8 @@ class Room:
 
     def unload(self):
         for tile in self.tiles:
-            tile.disp.parent.delete(tile.disp.tag)
+            if tile.disp is not None:
+                tile.disp.parent.delete(tile.disp.tag)
 
 
 class Tile:
