@@ -5,17 +5,18 @@ from Battle import *
 from Room_class import *
 import sys
 
-
 TileTest = PhotoImage(file="images/Movement_GUI/TileTest.png").zoom(5, 5).subsample(4, 4)
 WallTest = PhotoImage(file="images/Movement_GUI/WallTest.png").zoom(5, 5).subsample(4, 4)
 DoorTest = PhotoImage(file="images/Movement_GUI/DoorTest.png").zoom(5, 5).subsample(4, 4)
+FightTest = PhotoImage(file="images/Movement_GUI/FightTest.png").zoom(5, 5).subsample(4, 4)
+CheckPointTest = PhotoImage(file="images/Movement_GUI/CheckpointTest.png").zoom(5, 5).subsample(4, 4)
 Player1 = Player("Player1")  # PLAYER location from main.py moved for tile-combat
 
 Room_1 = Room([  # Y = 0
                Tile(scr, (0, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (1, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (2, 0), [WallTest], None, False, False, None, True),
-               Tile(scr, (3, 0), [DoorTest], lambda: battle([Player1], [Dummy], "TestBackground"), True, False, None, True),
+               Tile(scr, (3, 0), [FightTest], lambda: battle([Player1], [Dummy], "TestBackground"), True, False, None, True),
                Tile(scr, (4, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (5, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (6, 0), [WallTest], None, False, False, None, True),
@@ -181,9 +182,9 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (1, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (2, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (3, 5), [TileTest], None, False, False, None, False),
-               Tile(scr, (4, 5), [TileTest], None, False, False, None, False),
-               Tile(scr, (5, 5), [TileTest], None, False, False, None, False),
-               Tile(scr, (6, 5), [TileTest], None, False, False, None, False),
+               Tile(scr, (4, 5), [WallTest], None, False, False, None, True),
+               Tile(scr, (5, 5), [CheckPointTest], lambda: print("yep saved"), True, False, None, True),
+               Tile(scr, (6, 5), [WallTest], None, False, False, None, True),
                Tile(scr, (7, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (8, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (9, 5), [TileTest], None, False, False, None, False),

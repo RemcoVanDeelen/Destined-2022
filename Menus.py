@@ -102,9 +102,10 @@ def open_escape_menu(*bound):
         scr.create_image(960, 540, image=bg_rectangle, tag="BG_rectangle")
         resume_button.place(x=960-120, y=150)
         save_button.place(x=960-120, y=250)
-        load_button.place(x=960-120, y=350)
-        settings_button.place(x=960-120, y=450)
-        quit_button.place(x=960-120, y=550)
+        main_menu_button.place(x=960 - 120, y=350)
+        quit_button.place(x=960-120, y=450)
+
+        Player1.disp.cancel()
 
 
 def close_escape_menu(*bound):
@@ -120,9 +121,11 @@ def close_escape_menu(*bound):
 
     # Remove Escape GUI
     scr.delete("BG_rectangle")
+    scr.delete("Title")
     resume_button.place_forget()
     save_button.place_forget()
     load_button.place_forget()
+    main_menu_button.place_forget()
     settings_button.place_forget()
     quit_button.place_forget()
 
@@ -130,22 +133,80 @@ def close_escape_menu(*bound):
     file2_button.place_forget()
     file3_button.place_forget()
 
+    fullscreen_button.place_forget()
+
+    Player1.disp.roll()
+
+
+# Main menu functions:
+def open_main_menu():
+    close_escape_menu()
+    # Unbind all
+    win.unbind("<w>", )
+    win.unbind("<d>", )
+    win.unbind("<s>", )
+    win.unbind("<a>", )
+    win.unbind("<r>", )
+    win.unbind("<l>", )
+    win.unbind("<Escape>", )
+
+    Player1.room.unload()
+    Player1.disp.cancel()
+    scr.delete(Player1.disp.tag)
+    scr.create_image(960, 100, image=title_img, tag="Title")
+
+    load_button.place(x=960 - 120, y=250)
+    settings_button.place(x=960 - 120, y=350)
+    quit_button.place(x=960 - 120, y=450)
+
+
+# Setting functions:
+def open_settings_menu():
+    close_escape_menu()
+    Player1.disp.cancel()
+    scr.delete(Player1.disp.tag)
+    win.unbind("<w>", )
+    win.unbind("<d>", )
+    win.unbind("<s>", )
+    win.unbind("<a>", )
+    win.unbind("<r>", )
+    win.unbind("<l>", )
+    win.unbind("<Escape>", )
+
+    main_menu_button.place(x=960 - 120, y=250)
+    fullscreen_button.place(x=960 - 120, y=350)
+
+
+def toggle_fullscreen():
+    if win.attributes("-fullscreen"):
+        win.attributes("-fullscreen", False)
+    else:
+        win.attributes("-fullscreen", True)
+
 
 # Escape menu buttons:
 bg_rectangle = PhotoImage(file="images/BG_rectangle.png").zoom(120, 120)
 resume_img = PhotoImage(file="images/ButtonTest_resume.png").zoom(5, 4)
 save_img = PhotoImage(file="images/ButtonTest_save.png").zoom(5, 4)
 load_img = PhotoImage(file="images/ButtonTest_load.png").zoom(5, 4)
+main_menu_img = PhotoImage(file="images/ButtonTest_Main_menu.png").zoom(5, 4)
 settings_img = PhotoImage(file="images/ButtonTest_settings.png").zoom(5, 4)
 quit_img = PhotoImage(file="images/ButtonTest_quit.png").zoom(5, 4)
 resume_button = Button(scr, image=resume_img, highlightthickness=0, border=0, activebackground="#000000", command=close_escape_menu)
 save_button = Button(scr, image=save_img, highlightthickness=0, border=0, activebackground="#000000", command=save_to_file)
 load_button = Button(scr, image=load_img, highlightthickness=0, border=0, activebackground="#000000", command=load)
-settings_button = Button(scr, image=settings_img, highlightthickness=0, border=0, activebackground="#000000", command=exit)
+main_menu_button = Button(scr, image=main_menu_img, highlightthickness=0, border=0, activebackground="#000000", command=open_main_menu)
+settings_button = Button(scr, image=settings_img, highlightthickness=0, border=0, activebackground="#000000", command=open_settings_menu)
 quit_button = Button(scr, image=quit_img, highlightthickness=0, border=0, activebackground="#000000", command=exit)
 
 win.bind("<Escape>", open_escape_menu)
+title_img = PhotoImage(file="images/Title_test_img.png").zoom(5, 5)
 
+
+# Setting menu buttons:
+
+toggle_fullscreen_img = PhotoImage(file="images/ButtonTest_toggle_fullscreen.png").zoom(5, 4)
+fullscreen_button = Button(scr, image=toggle_fullscreen_img, highlightthickness=0, border=0, activebackground="#000000", command=toggle_fullscreen)
 
 # Save menu variables:
 file_var = IntVar()

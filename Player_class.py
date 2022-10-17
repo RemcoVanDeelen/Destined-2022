@@ -90,6 +90,7 @@ class Player:
                 self.facing = W
                 temp_pos[0] -= 1
             self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
+            scr.itemconfigure(self.tag, image=self.disp.gif[self.disp.frame])
             if not getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]].wall:
                 self.tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]]
                 self.moving = True

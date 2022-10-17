@@ -1,5 +1,3 @@
-import gc
-
 from Menus import *
 
 '''
@@ -9,11 +7,10 @@ for _ in range(0, 20):
             size = [(f, _)]
             print(size)
 '''  # Small function that prints out all possible sizes for 48x48 pixel objects. (zoom, subsample)
+# win.bind("<Key>", lambda event: print("<"+event.keysym+">"))
 
-scr.tag_raise(Player1.tag)
 # Player1 = Player("Player1")        moved to = Test_room_definitions.py =
 Player1.room = Room_1
 
-load(1)
-Player1.disp.roll()
+open_main_menu()
 win.mainloop()
