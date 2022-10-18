@@ -130,10 +130,11 @@ dummy_test_img = PhotoImage(file="images/Battle_GUI/Enemies/Dummy_foe.png").zoom
 
 pas = Move("Pass", 100, 1, en_act_pass, sequence={"suppressors": ["data[2].health<10"], "requirements": []})
 heal = Move("Heal", 100, 1, en_act_heal, sequence={"suppressors": [], "requirements": ["data[2].health<10"]})
-Dummy = Foe(max_health=50, ai=AI_basic, moves=[pas, heal], display=dummy_test_img)  # This foe always unless their health < 10, then they heal to full health (50).
+Dummy = Foe(max_health=50, ai=AI_basic, moves=[pas, heal], display=dummy_test_img, name="Training dummy")  # This foe always passes unless their health < 10, then they heal to full health (50).
 
 atk = Move("damage", 80, 1.5, en_act_damage1)
 pas = Move("pass", 20, 1, en_act_pass, sequence={"suppressors": [], "requirements": ["attacked"]})
 test_foe1 = Foe(5, 25, 0, 5, [atk, pas], ":Test foe 1:", foe_test_img, AI_basic)  # This foe has a 20% chance to pas if the previous turn was an attack.
+test_foe2 = Foe(5, 15, 0, 5, [atk, heal], ":Test foe 2:", foe_test_img, AI_basic)  # This foe has a 56% chance to heal to full when damaged.
 
 from Battle import deal_damage

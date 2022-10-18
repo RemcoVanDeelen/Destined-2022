@@ -1,10 +1,13 @@
 from Test_room_definitions import *
-from Action_definitions import *
+import sys
+
+Player1 = Player("Player1")  # PLAYER location from main.py moved for tile-combat and saving to file.
 
 
 # Save and load functions:
 def save_to_file():
     current_file = select_file()
+    glob = sys.modules["__main__"].global_list
 
     file = open(r"SaveFile{}.txt".format(current_file), "r+")
     lines = ""
@@ -15,14 +18,14 @@ def save_to_file():
                 if "<" in str(e[key]) or "<" in repr(e[key]):
                     if type(e[key]) != list:
                         try:
-                            e[key] = ["ValueName", list(globals().keys())[list(globals().values()).index(e[key])]]
+                            e[key] = ["ValueName", list(glob.keys())[list(glob.values()).index(e[key])]]
                         except ValueError:
                             e[key] = ["passed"]
                     else:
                         lis = []
                         for o in e[key]:
                             try:
-                                o = ["ValueName", list(globals().keys())[list(globals().values()).index(o)]]
+                                o = ["ValueName", list(glob.keys())[list(glob.values()).index(o)]]
                             except ValueError:
                                 o = "pass"
                             lis.append(o)
@@ -40,6 +43,7 @@ def save_to_file():
 
 
 def load(current_file=0):
+    glob = sys.modules["__main__"].global_list
     old = Player1.room
 
     if current_file == 0:
@@ -53,7 +57,7 @@ def load(current_file=0):
             for value in dictionary:
                 try:
                     if "ValueName" in dictionary[value]:
-                        result = globals()[dictionary[value][1]]
+                        result = glob[dictionary[value][1]]
                     elif "passed" in dictionary[value]:
                         result = getattr(Player1, value)
                     else:
@@ -61,13 +65,13 @@ def load(current_file=0):
                         if "ValueName" in str(dictionary[value]):
                             result = []
                             for item in dictionary[value]:
-                                result.append(globals()[item[1]])
+                                result.append(glob[item[1]])
                 except TypeError:
                     result = dictionary[value]
 
                 setattr(obj, value, result)
         elif len(line) > 7:
-            obj = globals()[line[7:len(line)-1]]
+            obj = glob[line[7:len(line)-1]]
 
     close_escape_menu()
     door(old, Player1.room, scr, Player1, location=Player1.position)
@@ -83,6 +87,13 @@ def select_file():
     file2_button.place_forget()
     file3_button.place_forget()
     return file_var.get()
+
+
+def checkpoint():
+    glob = sys.modules["__main__"].global_list
+    Player1.checkpoint = [Player1.position[0], Player1.position[1], list(glob.keys())[list(glob.values()).index(Player1.room)]]
+    print("checkpoint reached:", Player1.checkpoint)
+    save_to_file()
 
 
 # Escape menu functions
@@ -117,7 +128,7 @@ def close_escape_menu(*bound):
     win.bind("<s>", Player1.move)
     win.bind("<a>", Player1.move)
     win.bind("<r>", Player1.interact)
-    win.bind("<l>", lambda bound: battle([Player1], [test_foe1], "TestBackground"))
+    win.bind("<l>", lambda bound: battle([Player1], [test_foe1, test_foe2], "TestBackground"))
 
     # Remove Escape GUI
     scr.delete("BG_rectangle")

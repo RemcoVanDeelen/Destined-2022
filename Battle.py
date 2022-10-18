@@ -1,6 +1,6 @@
 # from Core import *
 from Player_class import *
-from Enemy_class import *
+from random import randint
 
 in_turn = IntVar()
 
@@ -232,8 +232,8 @@ inventory_frame.pack_propagate(False)
 # """  # ---------------- Display setting ----------------
 
 
-def battle(players: list[Player], enemies: list[Foe], location):
-    if enemies == [Dummy]:
+def battle(players: list[Player], enemies: list, location):
+    if enemies[0].name == "Training dummy":
         players[0].health = 1
 
     # Battle display prep

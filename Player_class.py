@@ -19,6 +19,7 @@ class Player:
         self.inventory = []
         self.spells = []
         self.weapon = None
+        self.gold = 0
 
         # Battle statistics:
         self.status = []

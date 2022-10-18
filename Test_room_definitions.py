@@ -3,6 +3,8 @@ from Player_class import *
 from Enemy_class import *
 from Battle import *
 from Room_class import *
+from Append_menus import *
+from Menus import *
 import sys
 
 TileTest = PhotoImage(file="images/Movement_GUI/TileTest.png").zoom(5, 5).subsample(4, 4)
@@ -10,7 +12,7 @@ WallTest = PhotoImage(file="images/Movement_GUI/WallTest.png").zoom(5, 5).subsam
 DoorTest = PhotoImage(file="images/Movement_GUI/DoorTest.png").zoom(5, 5).subsample(4, 4)
 FightTest = PhotoImage(file="images/Movement_GUI/FightTest.png").zoom(5, 5).subsample(4, 4)
 CheckPointTest = PhotoImage(file="images/Movement_GUI/CheckpointTest.png").zoom(5, 5).subsample(4, 4)
-Player1 = Player("Player1")  # PLAYER location from main.py moved for tile-combat
+StoreTest = PhotoImage(file="images/Movement_GUI/StoreTest.png").zoom(5, 5).subsample(4, 4)
 
 Room_1 = Room([  # Y = 0
                Tile(scr, (0, 0), [WallTest], None, False, False, None, True),
@@ -183,7 +185,7 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (2, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (3, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (4, 5), [WallTest], None, False, False, None, True),
-               Tile(scr, (5, 5), [CheckPointTest], lambda: print("yep saved"), True, False, None, True),
+               Tile(scr, (5, 5), [CheckPointTest], checkpoint, True, False, None, True),
                Tile(scr, (6, 5), [WallTest], None, False, False, None, True),
                Tile(scr, (7, 5), [TileTest], None, False, False, None, False),
                Tile(scr, (8, 5), [TileTest], None, False, False, None, False),
@@ -623,7 +625,7 @@ Room_2 = Room([  # Y = 0
                Tile(scr, (11, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (12, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (13, 0), [WallTest], None, False, False, None, True),
-               Tile(scr, (14, 0), [WallTest], None, False, False, None, True),
+               Tile(scr, (14, 0), [StoreTest], lambda: exchange(Player1, "buy", large_health_potion), True, False, None, True),
                Tile(scr, (15, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (16, 0), [WallTest], None, False, False, None, True),
                Tile(scr, (17, 0), [WallTest], None, False, False, None, True),
@@ -873,7 +875,7 @@ Room_2 = Room([  # Y = 0
                Tile(scr, (30, 7), [TileTest], None, False, False, None, False),
                Tile(scr, (31, 7), [WallTest], None, False, False, None, True),
                # Y = 8
-               Tile(scr, (0, 8), [WallTest], None, False, False, None, True),
+               Tile(scr, (0, 8), [CheckPointTest], checkpoint, True, False, None, True),
                Tile(scr, (1, 8), [TileTest], None, False, False, None, False),
                Tile(scr, (2, 8), [TileTest], None, False, False, None, False),
                Tile(scr, (3, 8), [TileTest], None, False, False, None, False),

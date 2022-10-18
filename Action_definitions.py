@@ -6,12 +6,14 @@ from Status_effects import *
 
 class Action:
     def __init__(self, function: str = "None",
-                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2)):
+                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2),
+                 value=0):
 
         self.use = getattr(self, function)
         self.image = img
         self.cooldown = 0
         self.name = function
+        self.value = value
 
     # -   -  -  - - ---= SPELLS =--- - -  -  -   - #
     def regenerate(self, data):
@@ -121,7 +123,6 @@ class Action:
         # obtain target,
         targets = []
         for foe in data[1]:
-            print(next((effect for effect in foe.status if effect.effect == "stasis_effect"), None))
             if next((effect for effect in foe.status if effect.effect == "stasis_effect"), None) is None:
                 targets.append(foe)
         target = find_target(targets)
