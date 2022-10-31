@@ -1,5 +1,14 @@
 class Effect:
     def __init__(self, time, effect, duration):
+        """
+        Effect class:
+
+        used to define any status effect given.
+
+        - time: defines when to trigger
+        - effect: defines effect function (included in class)
+        - duration: defines how long effect lasts
+        """
         self.time = time
         self.tick = getattr(self, effect)
         self.duration = duration
@@ -20,30 +29,30 @@ class Effect:
             data[2].health = data[2].max_health
         self.duration -= 1
 
-    def foresight_effect(self, data):                   # FILLER function.
+    def foresight_effect(self, _):                   # FILLER function.
         self.duration -= 1
 
-    def opponent_foresight_effect(self, data):          # FILLER function.
+    def opponent_foresight_effect(self, _):          # FILLER function.
         self.duration -= 1
 
-    def enchanted_weapon(self, data):
+    def enchanted_weapon(self, _):
         self.duration -= 1
         return 4                                        # FILLER damage.
 
-    def enchanted_weapon_empowered(self, data):
+    def enchanted_weapon_empowered(self, _):
         self.duration -= 1
         return 8                                        # FILLER damage.
 
-    def barrier_effect(self, data):                 # FILLER function.
+    def barrier_effect(self, _):                 # FILLER function.
         self.duration -= 1
 
-    def opponent_barrier_effect(self, data):                 # FILLER function.
+    def opponent_barrier_effect(self, _):                 # FILLER function.
         self.duration -= 1
 
-    def opponent_barrier_effect_empowered(self, data):          # FILLER function.
+    def opponent_barrier_effect_empowered(self, _):          # FILLER function.
         self.duration -= 1
 
-    def weakened(self, data):
+    def weakened(self, _):
         self.duration -= 1
         return -0.25
 
@@ -59,24 +68,24 @@ class Effect:
         data[2].health -= 6                         # FILLER damage.
         self.duration -= 1
 
-    def stasis_effect(self, data):
+    def stasis_effect(self, _):
         self.duration -= 1
 
-    def strength(self, data):                       # FILLER function.
-        self.duration -= 1
-        return 0.2
-
-    def shielded(self, data):                       # FILLER function.
-        self.duration -= 1
-
-    def resistance(self, data):                       # FILLER function.
+    def strength(self, _):                       # FILLER function.
         self.duration -= 1
         return 0.2
 
-    def staminaless(self, data):                       # FILLER function.
+    def shielded(self, _):                       # FILLER function.
         self.duration -= 1
 
-    def defending(self, data):
+    def resistance(self, _):                       # FILLER function.
+        self.duration -= 1
+        return 0.2
+
+    def staminaless(self, _):                       # FILLER function.
+        self.duration -= 1
+
+    def defending(self, _):
         return 0.3
 
 
