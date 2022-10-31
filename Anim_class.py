@@ -1,6 +1,6 @@
 class Animation:
     def __init__(self, parent, coords=[0, 0], tag=None, gif=None, framerate=[], repeats=0, trajectory=[], frame=0, destroy=False, t_repeats=0):
-        '''
+        """
         Animation class:
 
         Allows for animating a gif object. \n
@@ -13,7 +13,7 @@ class Animation:
         NECESSARY VARIABLES:
          * parent = tkinter.Canvas
          * gif = list
-        '''
+        """
 
         self.parent = parent
         self.coords = coords
@@ -30,7 +30,7 @@ class Animation:
         if tag is None:
             self.tag = str(str(framerate) + str(parent) + str(coords)).replace(" ", "").replace("!", "")
 
-        if framerate == []:
+        if not framerate:
             for _ in gif:
                 self.framerate.append(10)
 
@@ -60,7 +60,7 @@ class Animation:
             if self.rolling:
                 self.parent.itemconfigure(image=self.gif[self.frame], tagOrId=self.tag)
 
-                if self.trajectory != []:
+                if self.trajectory:
                     if self.t_repeats >= 0:
                         self.coords[0] += self.trajectory[self.frame][0]
                         self.coords[1] += self.trajectory[self.frame][1]

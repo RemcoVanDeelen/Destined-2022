@@ -27,4 +27,3 @@ def exchange(player=None, action="buy", item=None):
         player.gold += round(item.value * 0.8)
         player.inventory.remove(item)
         print("sold", item.name, "for", round(item.value*0.8))
-

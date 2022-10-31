@@ -3,11 +3,11 @@ from Anim_class import *
 
 class Room:
     def __init__(self, tiles, width, height):
-        '''
+        """
         Basic room class:
 
         INSERT DEFINITION HERE
-        '''
+        """
         self.width = width
         self.height = height
         self.tiles = tiles
@@ -30,11 +30,11 @@ class Room:
 
 class Tile:
     def __init__(self, parent, pos: tuple, sprite, act=None, interact=False, animated=False, framerate=None, wall=False):
-        '''
+        """
         Basic tile class:
 
         INSERT DEFINITION HERE
-        '''
+        """
         self.pos = pos  # position in (x, y)
         self.act = act  # Action function
         self.sprite = sprite  # Displayed PhotoImage
@@ -67,4 +67,3 @@ def door(old: Room, new: Room, parent, player, camera=[0, 0], location=[0, 0], w
     player.room = new
     if warp:
         player.warp(location, new)
-

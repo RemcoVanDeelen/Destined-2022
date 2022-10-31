@@ -3,9 +3,10 @@
 ---
 ----- Current goals: -----
 
-* Saving to files,
-* Checkpoint system and death consequence,
-* Experience gain and leveling system. (Soul)
+* Polishing of combat and movement systems,
+* Soul levels (exp and level up system),
+* Inventory menus and shops,
+* Completion of passive spells.
 
 ---
 ----- Commit layout: -----

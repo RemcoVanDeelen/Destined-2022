@@ -1,7 +1,7 @@
 from Test_room_definitions import *
 import sys
 
-Player1 = Player("Player1")  # PLAYER location from main.py moved for tile-combat and saving to file.
+Player1 = Player("Player1")  # PLAYER location moved here for tile-combat and saving to file.
 
 
 # Save and load functions:
@@ -68,6 +68,15 @@ def load(current_file=0):
                                 result.append(glob[item[1]])
                 except TypeError:
                     result = dictionary[value]
+
+                if type(result) == list:
+                    for in_value in result:
+                        if type(in_value) == str:
+                            try:
+                                new_value = glob[in_value]
+                                result[result.index(in_value)] = new_value
+                            except ValueError:
+                                pass
 
                 setattr(obj, value, result)
         elif len(line) > 7:

@@ -31,14 +31,14 @@ class Action:
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
         print(1, self.use)
-        end_turn()
+        end_turn(3)
 
     def empower(self, data):
         # Grant effect.
         data[2].status.append(Effect(0, "empowered", True))
         self.cooldown = 999
         print(2, self.use)
-        end_turn()
+        end_turn(3)
 
     def lightning(self, data):
         # obtain target,
@@ -58,7 +58,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
         print(3, self.use)
-        end_turn()
+        end_turn(3)
 
     def elemental_volley(self, data):
         shards = 3
@@ -86,7 +86,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown.
         print(4, self.use)
-        end_turn()
+        end_turn(3)
 
     def foresight(self, data):
         # Grant effect,
@@ -117,7 +117,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
         print(5, self.use)
-        end_turn()
+        end_turn(3)
 
     def stasis(self, data):
         # obtain target,
@@ -142,7 +142,7 @@ class Action:
         # start cooldown.
         self.cooldown = cd
         print(6, self.use)
-        end_turn()
+        end_turn(3)
 
     def agility(self, data):
         # Passive, increases speed,
@@ -171,7 +171,7 @@ class Action:
         # start cooldown.
         self.cooldown = cd
         print(8, self.use)
-        end_turn()
+        end_turn(3)
 
     def fireball(self, data):
         # obtain target,
@@ -196,7 +196,7 @@ class Action:
         # start cooldown.
         self.cooldown = cd
         print(9, self.use)
-        end_turn()
+        end_turn(3)
 
     def stamina(self, data):
         # Passive, increases max_stamina,
@@ -220,7 +220,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
         print(11, self.use)
-        end_turn()
+        end_turn(3)
 
     def enchant_weapon(self, data):
         # check empowered,
@@ -237,7 +237,7 @@ class Action:
         # start cooldown.
         self.cooldown = 999
         print(12, self.use)
-        end_turn()
+        end_turn(3)
 
     def recover(self, data):
         # check empowered,
@@ -263,7 +263,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                                 # FILLER cooldown.
         print(13, self.use)
-        end_turn()
+        end_turn(3)
 
     def venom(self, data):
         # obtain target,
@@ -283,7 +283,7 @@ class Action:
         # start cooldown
         self.cooldown = 3                                # FILLER cooldown.
         print(14, self.use)
-        end_turn()
+        end_turn(3)
 
     def focus(self, data):
         # passive, decreases spell and item cooldown,
@@ -296,7 +296,7 @@ class Action:
         # skip actions,
         # start cooldown.
         print(16, self.use)
-        end_turn()
+        end_turn(3)
 
     def heal(self, data):
         # check empowered,
@@ -317,7 +317,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
         print(17, self.use)
-        end_turn()
+        end_turn(3)
 
     def barrier(self, data):
         # Grant effect,
@@ -339,7 +339,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                                # FILLER cooldown.
         print(18, self.use)
-        end_turn()
+        end_turn(3)
 
     def chaotic_strike(self, data):         # FILLER Function, should be disabled when stamina_req not met, should not consume empowered unless used.
         # check empowered,
@@ -370,7 +370,7 @@ class Action:
             # take stamina.
             data[2].stamina -= stamina_cost
             print(19, self.use)
-            end_turn()
+            end_turn(0)
 
     def siphon(self, data):
         # obtain target,
@@ -394,7 +394,7 @@ class Action:
         # start cooldown.
         self.cooldown = 3                               # FILLER cooldown
         print(20, self.use)
-        end_turn()
+        end_turn(3)
 
     def slow_time(self, data):
         # check empowered,                              # Effect not yet decided.
@@ -408,7 +408,7 @@ class Action:
         # set double turn to True,
         # start cooldown, start effect duration. { or not }
         print(21, self.use)
-        end_turn()
+        end_turn(3)
 
     # -   -  -  - - ---= ITEMS =--- - -  -  -   - #
     def health_potion(self, data):
@@ -419,7 +419,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("A", self.use)
-        end_turn()
+        end_turn(3)
 
     def large_health_potion(self, data):
         data[2].health += 30
@@ -429,7 +429,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("B", self.use)
-        end_turn()
+        end_turn(3)
 
     def stamina_potion(self, data):
         data[2].stamina += 8
@@ -439,7 +439,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("C", self.use)
-        end_turn()
+        end_turn(3)
 
     def large_stamina_potion(self, data):
         data[2].stamina += 15
@@ -449,7 +449,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("D", self.use)
-        end_turn()
+        end_turn(3)
 
     def strength_potion(self, data):
         data[2].status.append(Effect("attacking", "strength", 4))
@@ -457,7 +457,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("E", self.use)
-        end_turn()
+        end_turn(3)
 
     def vitality_potion(self, data):
         data[2].health += 5
@@ -465,7 +465,7 @@ class Action:
         data[2].inventory.remove(self)
 
         print("F", self.use)
-        end_turn()
+        end_turn(3)
 
     def shield_potion(self, data):
         data[2].status.append(Effect("attacked", "shielded", 3))
@@ -473,7 +473,7 @@ class Action:
         self.cooldown = 5                           # FILLER cooldown.
 
         print("G", self.use)
-        end_turn()
+        end_turn(3)
 
     def resistance_potion(self, data):
         data[2].status.append(Effect("attacked", "resistance", 5))
@@ -481,7 +481,7 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("H", self.use)
-        end_turn()
+        end_turn(3)
 
     def staminaless_potion(self, data):
         data[2].status.append(Effect("end", "staminaless", 5))
@@ -489,12 +489,12 @@ class Action:
         self.cooldown = 3                           # FILLER cooldown.
 
         print("I", self.use)
-        end_turn()
+        end_turn(3)
 
     # -   -  -  - - ---= ACTIONS =--- - -  -  -   - #
     def defend(self, data):
         data[2].status.append(Effect("start", "defending", 1))
-        end_turn()
+        end_turn(3)
 
 
 # Spells

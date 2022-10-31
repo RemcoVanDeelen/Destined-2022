@@ -4,7 +4,7 @@ from Room_class import *
 
 class Player:
     def __init__(self, tag: str):
-        '''
+        """
         Define a player by giving it a tag.\n
         it will be located at [1, 1] and will not yet be animated. [self.disp.roll]\n
         Functions:\n
@@ -14,7 +14,7 @@ class Player:
         - OTHER {[To Be Added In Future]}.
 
         :param tag: str | int
-        '''
+        """
         # Inventories:
         self.inventory = []
         self.spells = []
@@ -23,12 +23,14 @@ class Player:
 
         # Battle statistics:
         self.status = []
-        self.damage = 0
+        self.damage = 10
         self.max_health = 25
         self.health = 25
         self.max_stamina = 20
         self.stamina = 20
         self.speed = 10
+        self.light_atk_cost = 5
+        self.heavy_atk_cost = 8
 
         self.soul = 0
         self.level = 1
@@ -142,10 +144,42 @@ class Player:
         scr.coords(self.tag, self.coordinates[0], self.coordinates[1])
 
         self.tile = getattr(self.room, "Y_"+str(destination[1]))[destination[0]]
-        self.stop = True
+
         if activate:
             self.tile.activate()
 
     #                                   Battle functions:                                         #
     def turn(self, data):
         pass
+
+
+class Weapon:
+    def __init__(self, damage_modifier, light_atk_cost, heavy_atk_cost, speed_modifier):
+        self.damage_modifier = damage_modifier
+        self.light_atk_cost = light_atk_cost
+        self.heavy_atk_cost = heavy_atk_cost
+        self.speed_modifier = speed_modifier
+
+    def equip(self, player):
+        print("Player equipped", self, "over", player.weapon)
+        if player.weapon:
+            player.weapon.un_equip(player)
+
+        player.weapon = self
+        player.damage += self.damage_modifier
+        player.light_atk_cost += self.light_atk_cost
+        player.heavy_atk_cost += self.heavy_atk_cost
+        player.speed += self.speed_modifier
+
+    def un_equip(self, player):
+        player.damage -= self.damage_modifier
+        player.light_atk_cost -= self.light_atk_cost
+        player.heavy_atk_cost -= self.heavy_atk_cost
+        player.speed -= self.speed_modifier
+
+
+hammer = Weapon(5, 2, 2, -4)
+battle_axe = Weapon(4, 1, 1, -2)
+sword = Weapon(3, 0, 0, 0)
+short_sword = Weapon(2, -1, -1, +2)
+daggers = Weapon(1, -2, -2, +4)

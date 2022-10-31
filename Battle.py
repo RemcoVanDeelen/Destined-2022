@@ -5,11 +5,14 @@ from random import randint
 in_turn = IntVar()
 
 
-def end_turn():  # function for ending turns, spell in put is after this because spells use this function.
+def end_turn(stamina_return):  # function for ending turns, spell in put is after this because spells use this function.
     place_main()
     for button in placed_buttons:
         button.configure(state="disabled")
 
+    data[2].stamina += stamina_return
+    if data[2].stamina > data[2].max_stamina:
+        data[2].stamina = data[2].max_stamina
     in_turn.set(1)
 
 
@@ -118,11 +121,11 @@ def place_attack():
         child.place_forget()
     placed_buttons = [light_attack_button, heavy_attack_button]
 
-    if data[2].stamina < 5:
+    if data[2].stamina < data[2].light_atk_cost:
         light_attack_button.configure(state="disabled")
     else:
         light_attack_button.configure(state="normal")
-    if data[2].stamina < 8:
+    if data[2].stamina < data[2].heavy_atk_cost:
         heavy_attack_button.configure(state="disabled")
     else:
         heavy_attack_button.configure(state="normal")
@@ -199,16 +202,16 @@ def place_actions():
 
 # melee attack functions
 def light_attack():
-    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=7)  # FILLER damage.
-    data[2].stamina -= 6                        # FILLER stamina cost.
-    end_turn()
+    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=int(data[2].damage*0.7))  # FILLER damage.
+    data[2].stamina -= data[2].light_atk_cost
+    end_turn(0)
 
 
 def heavy_attack():
-    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=12)  # FILLER damage.
-    data[2].stamina -= 8                        # FILLER stamina cost.
+    deal_damage(attacker=data[2], target=find_target(data[1]), exact_damage=int(data[2].damage*1.3))  # FILLER damage.
+    data[2].stamina -= data[2].heavy_atk_cost
 
-    end_turn()
+    end_turn(0)
 
 
 # = Main button creation and placement =
@@ -374,6 +377,17 @@ def battle(players: list[Player], enemies: list, location):
 
     print("\n - Battle concluded -")
     players[0].room.load()
+
+    if players[0].health <= 0:
+        players[0].warp([players[0].checkpoint[0], players[0].checkpoint[1]], players[0].checkpoint[2])
+        players[0].health = round(players[0].max_health/8)
+        print(" Caused by Player death")
+    else:
+        print(" Soul earned: ", end="")
+        for foe in enemies:
+            if foe.health <= 0:
+                print(foe.soul, ", ", end="", sep="")
+    
     for player in players:
         scr.tag_raise(player.disp.tag)
         player.status = []
@@ -388,6 +402,7 @@ def battle(players: list[Player], enemies: list, location):
         for player in players:
             if child != player.disp:
                 child.place_forget()
+
     scr.delete("bg_img")
     scr.delete("battle_frame")
     scr.delete("label_frame")
