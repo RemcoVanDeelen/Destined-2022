@@ -205,13 +205,13 @@ def toggle_fullscreen():
 
 
 # Escape menu buttons:
-bg_rectangle = PhotoImage(file="images/BG_rectangle.png").zoom(120, 120)
-resume_img = PhotoImage(file="images/ButtonTest_resume.png").zoom(5, 4)
-save_img = PhotoImage(file="images/ButtonTest_save.png").zoom(5, 4)
-load_img = PhotoImage(file="images/ButtonTest_load.png").zoom(5, 4)
-main_menu_img = PhotoImage(file="images/ButtonTest_Main_menu.png").zoom(5, 4)
-settings_img = PhotoImage(file="images/ButtonTest_settings.png").zoom(5, 4)
-quit_img = PhotoImage(file="images/ButtonTest_quit.png").zoom(5, 4)
+bg_rectangle = PhotoImage(file="images/BG_rectangle.png".replace("/", os.sep)).zoom(120, 120)
+resume_img = PhotoImage(file="images/ButtonTest_resume.png".replace("/", os.sep)).zoom(5, 4)
+save_img = PhotoImage(file="images/ButtonTest_save.png".replace("/", os.sep)).zoom(5, 4)
+load_img = PhotoImage(file="images/ButtonTest_load.png".replace("/", os.sep)).zoom(5, 4)
+main_menu_img = PhotoImage(file="images/ButtonTest_Main_menu.png".replace("/", os.sep)).zoom(5, 4)
+settings_img = PhotoImage(file="images/ButtonTest_settings.png".replace("/", os.sep)).zoom(5, 4)
+quit_img = PhotoImage(file="images/ButtonTest_quit.png".replace("/", os.sep)).zoom(5, 4)
 resume_button = Button(scr, image=resume_img, highlightthickness=0, border=0, activebackground="#000000", command=close_escape_menu)
 save_button = Button(scr, image=save_img, highlightthickness=0, border=0, activebackground="#000000", command=save_to_file)
 load_button = Button(scr, image=load_img, highlightthickness=0, border=0, activebackground="#000000", command=load)
@@ -220,12 +220,12 @@ settings_button = Button(scr, image=settings_img, highlightthickness=0, border=0
 quit_button = Button(scr, image=quit_img, highlightthickness=0, border=0, activebackground="#000000", command=exit)
 
 win.bind("<Escape>", open_escape_menu)
-title_img = PhotoImage(file="images/Title_test_img.png").zoom(5, 5)
+title_img = PhotoImage(file="images/Title_test_img.png".replace("/", os.sep)).zoom(5, 5)
 
 
 # Setting menu buttons:
 
-toggle_fullscreen_img = PhotoImage(file="images/ButtonTest_toggle_fullscreen.png").zoom(5, 4)
+toggle_fullscreen_img = PhotoImage(file="images/ButtonTest_toggle_fullscreen.png".replace("/", os.sep)).zoom(5, 4)
 fullscreen_button = Button(scr, image=toggle_fullscreen_img, highlightthickness=0, border=0, activebackground="#000000", command=toggle_fullscreen)
 
 # Save menu variables:

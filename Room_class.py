@@ -6,7 +6,10 @@ class Room:
         """
         Basic room class:
 
-        INSERT DEFINITION HERE
+        A room holds Tile objects and allows movement between these.
+
+        32x18 size room is large enough to fill a 1920x1080 screen.
+        A room this size requires 578 lines of code, for this reason tool use is advised when creating rooms.
         """
         self.width = width
         self.height = height
@@ -33,7 +36,13 @@ class Tile:
         """
         Basic tile class:
 
-        INSERT DEFINITION HERE
+        Tile objects are entered into room objects in large masses.
+        They hold their position, function, image, and more.
+
+        The typical Tile definition will look something like this
+
+        - Tile(scr, (3, 0), [FightImage], lambda: battle([Player1], [Dummy], "TestBackground"), True, False, None, True),
+
         """
         self.pos = pos  # position in (x, y)
         self.act = act  # Action function
@@ -67,3 +76,4 @@ def door(old: Room, new: Room, parent, player, camera=[0, 0], location=[0, 0], w
     player.room = new
     if warp:
         player.warp(location, new)
+        player.stop = True

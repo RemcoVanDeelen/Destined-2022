@@ -1,6 +1,6 @@
 from random import randint
 from tkinter import PhotoImage
-from Battle import deal_damage
+from Battle import deal_damage, os
 
 
 class AI:
@@ -126,8 +126,8 @@ AI_basic.turn = turn_basic
 #                   {"requirements": ["data[2].health>10"],
 #                   "suppressors": ["data[0][0].health<10"]})]
 
-foe_test_img = PhotoImage(file="images/Battle_GUI/FoeTest.png").zoom(5, 5).subsample(2, 2)
-dummy_test_img = PhotoImage(file="images/Battle_GUI/Enemies/Dummy_foe.png").zoom(5, 5).subsample(2, 2)
+foe_test_img = PhotoImage(file="images/Battle_GUI/FoeTest.png".replace("/", os.sep)).zoom(5, 5).subsample(2, 2)
+dummy_test_img = PhotoImage(file="images/Battle_GUI/Enemies/Dummy_foe.png".replace("/", os.sep)).zoom(5, 5).subsample(2, 2)
 
 pas = Move("Pass", 100, 1, en_act_pass, sequence={"suppressors": ["data[2].health<10"], "requirements": []})
 heal = Move("Heal", 100, 1, en_act_heal, sequence={"suppressors": [], "requirements": ["data[2].health<10"]})

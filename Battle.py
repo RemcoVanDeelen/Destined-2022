@@ -1,4 +1,4 @@
-# from Core import *
+import os
 from Player_class import *
 from random import randint
 
@@ -85,20 +85,20 @@ def deal_damage(attacker=None, target=None, is_melee=True, exact_damage=0, perce
 
 
 # imagery:
-img_fight_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Fight.png").zoom(6, 6)
-img_magic_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Magic.png").zoom(6, 6)
-img_bag_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Bag.png").zoom(6, 6)
-img_action_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Action.png").zoom(6, 6)
-img_return_button = PhotoImage(file="images/Battle_GUI/ReturnButtonTest.png").zoom(3, 3)
+img_fight_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Fight.png".replace("/", os.sep)).zoom(6, 6)
+img_magic_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Magic.png".replace("/", os.sep)).zoom(6, 6)
+img_bag_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Bag.png".replace("/", os.sep)).zoom(6, 6)
+img_action_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Action.png".replace("/", os.sep)).zoom(6, 6)
+img_return_button = PhotoImage(file="images/Battle_GUI/ReturnButtonTest.png".replace("/", os.sep)).zoom(3, 3)
 
-img_heavy_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Heavy_atk.png").zoom(6, 6)
-img_light_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Light_atk.png").zoom(6, 6)
+img_heavy_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Heavy_atk.png".replace("/", os.sep)).zoom(6, 6)
+img_light_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Light_atk.png".replace("/", os.sep)).zoom(6, 6)
 
 
-img_battle_frame = PhotoImage(file="images/Battle_GUI/BattleMenuTest.png").zoom(5, 5)
-img_text_label_frame = PhotoImage(file="images/Battle_GUI/TextLabelTest.png").zoom(5, 5)
+img_battle_frame = PhotoImage(file="images/Battle_GUI/BattleMenuTest.png".replace("/", os.sep)).zoom(5, 5)
+img_text_label_frame = PhotoImage(file="images/Battle_GUI/TextLabelTest.png".replace("/", os.sep)).zoom(5, 5)
 
-pointer_img = PhotoImage(file="images/Battle_GUI/item_pointer.png").zoom(5, 5)
+pointer_img = PhotoImage(file="images/Battle_GUI/item_pointer.png".replace("/", os.sep)).zoom(5, 5)
 
 # Global list definitions (need to be moved to other location):
 placed_buttons = []
@@ -107,7 +107,7 @@ data = []
 
 # Display functions:
 def place_bg(location):
-    scr.bg = PhotoImage(file="images/Backgrounds/"+location+".png").zoom(10, 10)
+    scr.bg = PhotoImage(file="images/Backgrounds/"+location+".png".replace("/", os.sep)).zoom(10, 10)
     scr.create_image(1920/2, 1080/2, image=scr.bg, tag="bg_img")
 
     scr.create_image(15+1890/2, 1080 // 4 * 3 + 80, image=img_battle_frame, tag="battle_frame")
@@ -382,11 +382,11 @@ def battle(players: list[Player], enemies: list, location):
         players[0].warp([players[0].checkpoint[0], players[0].checkpoint[1]], players[0].checkpoint[2])
         players[0].health = round(players[0].max_health/8)
         print(" Caused by Player death")
-    else:
-        print(" Soul earned: ", end="")
-        for foe in enemies:
-            if foe.health <= 0:
-                print(foe.soul, ", ", end="", sep="")
+
+    print(" Soul earned: ", end="")
+    for foe in enemies:
+        if foe.health <= 0:
+            print(foe.soul, ", ", end="", sep="")
     
     for player in players:
         scr.tag_raise(player.disp.tag)

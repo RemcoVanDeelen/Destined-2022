@@ -2,11 +2,12 @@ from Core import *
 from random import randint
 from Battle import end_turn, find_target, deal_damage
 from Status_effects import *
+import os
 
 
 class Action:
     def __init__(self, function: str = "None",
-                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2),
+                 img: PhotoImage = PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png".replace("/", os.sep)).zoom(2, 2),
                  value=0):
 
         self.use = getattr(self, function)
@@ -498,48 +499,48 @@ class Action:
 
 
 # Spells
-regenerate = Action("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png").zoom(2, 2))                       # 1
-empower = Action("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png").zoom(2, 2))                                # 2
-lightning = Action("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png").zoom(2, 2))                          # 3
+regenerate = Action("regenerate", PhotoImage(file="images/Battle_GUI/Magic/1-SpellButtonTest-Regenerate.png".replace("/", os.sep)).zoom(2, 2))                       # 1
+empower = Action("empower", PhotoImage(file="images/Battle_GUI/Magic/2-SpellButtonTest-Empower.png".replace("/", os.sep)).zoom(2, 2))                                # 2
+lightning = Action("lightning", PhotoImage(file="images/Battle_GUI/Magic/3-SpellButtonTest-Lightning.png".replace("/", os.sep)).zoom(2, 2))                          # 3
 
-elemental_volley = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png").zoom(2, 2))     # 4
-foresight = Action("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png").zoom(2, 2))                          # 5
+elemental_volley = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/4-SpellButtonTest-Elemental_volley.png".replace("/", os.sep)).zoom(2, 2))     # 4
+foresight = Action("foresight", PhotoImage(file="images/Battle_GUI/Magic/5-SpellButtonTest-Foresight.png".replace("/", os.sep)).zoom(2, 2))                          # 5
 
-stasis = Action("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png").zoom(2, 2))                                   # 6
-agility = Action("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png").zoom(2, 2))                                # 7
-weaken = Action("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png").zoom(2, 2))                                   # 8
+stasis = Action("stasis", PhotoImage(file="images/Battle_GUI/Magic/6-SpellButtonTest-Stasis.png".replace("/", os.sep)).zoom(2, 2))                                   # 6
+agility = Action("agility", PhotoImage(file="images/Battle_GUI/Magic/7-SpellButtonTest-Agility.png".replace("/", os.sep)).zoom(2, 2))                                # 7
+weaken = Action("weaken", PhotoImage(file="images/Battle_GUI/Magic/8-SpellButtonTest-Weaken.png".replace("/", os.sep)).zoom(2, 2))                                   # 8
 
-fireball = Action("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png").zoom(2, 2))                             # 9
+fireball = Action("fireball", PhotoImage(file="images/Battle_GUI/Magic/9-SpellButtonTest-Fireball.png".replace("/", os.sep)).zoom(2, 2))                             # 9
 
-stamina = Action("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png").zoom(2, 2))                               # 10
-whirlwind = Action("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png").zoom(2, 2))                         # 11
-enchant_weapon = Action("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png").zoom(2, 2))          # 12
+stamina = Action("stamina", PhotoImage(file="images/Battle_GUI/Magic/10-SpellButtonTest-Stamina.png".replace("/", os.sep)).zoom(2, 2))                               # 10
+whirlwind = Action("whirlwind", PhotoImage(file="images/Battle_GUI/Magic/11-SpellButtonTest-Whirlwind.png".replace("/", os.sep)).zoom(2, 2))                         # 11
+enchant_weapon = Action("enchant_weapon", PhotoImage(file="images/Battle_GUI/Magic/12-SpellButtonTest-Enchant_weapon.png".replace("/", os.sep)).zoom(2, 2))          # 12
 
-recover = Action("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png").zoom(2, 2))                               # 13
-venom = Action("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png").zoom(2, 2))                                     # 14
+recover = Action("recover", PhotoImage(file="images/Battle_GUI/Magic/13-SpellButtonTest-Recover.png".replace("/", os.sep)).zoom(2, 2))                               # 13
+venom = Action("venom", PhotoImage(file="images/Battle_GUI/Magic/14-SpellButtonTest-Venom.png".replace("/", os.sep)).zoom(2, 2))                                     # 14
 
-focus = Action("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png").zoom(2, 2))                                     # 15
-calm = Action("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png").zoom(2, 2))                                        # 16
-heal = Action("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png").zoom(2, 2))                                        # 17
+focus = Action("focus", PhotoImage(file="images/Battle_GUI/Magic/15-SpellButtonTest-Focus.png".replace("/", os.sep)).zoom(2, 2))                                     # 15
+calm = Action("calm", PhotoImage(file="images/Battle_GUI/Magic/16-SpellButtonTest-Calm.png".replace("/", os.sep)).zoom(2, 2))                                        # 16
+heal = Action("heal", PhotoImage(file="images/Battle_GUI/Magic/17-SpellButtonTest-Heal.png".replace("/", os.sep)).zoom(2, 2))                                        # 17
 
-barrier = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png").zoom(2, 2))                      # 18
+barrier = Action("elemental_volley", PhotoImage(file="images/Battle_GUI/Magic/18-SpellButtonTest-Barrier.png".replace("/", os.sep)).zoom(2, 2))                      # 18
 
-chaotic_strike = Action("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png").zoom(2, 2))          # 19
-siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png").zoom(2, 2))                                  # 20
-slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png").zoom(2, 2))                         # 21
+chaotic_strike = Action("chaotic_strike", PhotoImage(file="images/Battle_GUI/Magic/19-SpellButtonTest-Chaotic_strike.png".replace("/", os.sep)).zoom(2, 2))          # 19
+siphon = Action("siphon", PhotoImage(file="images/Battle_GUI/Magic/20-SpellButtonTest-Siphon.png".replace("/", os.sep)).zoom(2, 2))                                  # 20
+slow_time = Action("slow_time", PhotoImage(file="images/Battle_GUI/Magic/21-SpellButtonTest-Slow_time.png".replace("/", os.sep)).zoom(2, 2))                         # 21
 
 # Items
-health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Health_potion.png").zoom(2, 2))                                    # A
-large_health_potion = Action("large_health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Health_potion.png").zoom(2, 2))                  # B
+health_potion = Action("health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Health_potion.png".replace("/", os.sep)).zoom(2, 2))                                    # A
+large_health_potion = Action("large_health_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Health_potion.png".replace("/", os.sep)).zoom(2, 2))                  # B
 
-stamina_potion = Action("stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Stamina_potion.png").zoom(2, 2))                                 # C
-large_stamina_potion = Action("large_stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Stamina_potion.png").zoom(2, 2))               # D
+stamina_potion = Action("stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Stamina_potion.png".replace("/", os.sep)).zoom(2, 2))                                 # C
+large_stamina_potion = Action("large_stamina_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Large_Stamina_potion.png".replace("/", os.sep)).zoom(2, 2))               # D
 
-strength_potion = Action("strength_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Strength_potion.png").zoom(2, 2))                              # E
+strength_potion = Action("strength_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Strength_potion.png".replace("/", os.sep)).zoom(2, 2))                              # E
 
-vitality_potion = Action("vitality_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Vitality_potion.png").zoom(2, 2))                              # F
+vitality_potion = Action("vitality_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Vitality_potion.png".replace("/", os.sep)).zoom(2, 2))                              # F
 
-shield_potion = Action("shield_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Shield_potion.png").zoom(2, 2))                                    # G
-resistance_potion = Action("resistance_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Resistance_potion.png").zoom(2, 2))                        # H
+shield_potion = Action("shield_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Shield_potion.png".replace("/", os.sep)).zoom(2, 2))                                    # G
+resistance_potion = Action("resistance_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Resistance_potion.png".replace("/", os.sep)).zoom(2, 2))                        # H
 
-staminaless_potion = Action("staminaless_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Staminaless_potion.png").zoom(2, 2))                     # I
+staminaless_potion = Action("staminaless_potion", PhotoImage(file="images/Battle_GUI/ItemButtonTest-Staminaless_potion.png".replace("/", os.sep)).zoom(2, 2))                     # I

@@ -7,12 +7,12 @@ from Append_menus import *
 from Menus import *
 import sys
 
-TileTest = PhotoImage(file="images/Movement_GUI/TileTest.png").zoom(5, 5).subsample(4, 4)
-WallTest = PhotoImage(file="images/Movement_GUI/WallTest.png").zoom(5, 5).subsample(4, 4)
-DoorTest = PhotoImage(file="images/Movement_GUI/DoorTest.png").zoom(5, 5).subsample(4, 4)
-FightTest = PhotoImage(file="images/Movement_GUI/FightTest.png").zoom(5, 5).subsample(4, 4)
-CheckPointTest = PhotoImage(file="images/Movement_GUI/CheckpointTest.png").zoom(5, 5).subsample(4, 4)
-StoreTest = PhotoImage(file="images/Movement_GUI/StoreTest.png").zoom(5, 5).subsample(4, 4)
+TileTest = PhotoImage(file="images/Movement_GUI/TileTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+WallTest = PhotoImage(file="images/Movement_GUI/WallTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+DoorTest = PhotoImage(file="images/Movement_GUI/DoorTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+FightTest = PhotoImage(file="images/Movement_GUI/FightTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+CheckPointTest = PhotoImage(file="images/Movement_GUI/CheckpointTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+StoreTest = PhotoImage(file="images/Movement_GUI/StoreTest.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 
 Room_1 = Room([  # Y = 0
                Tile(scr, (0, 0), [WallTest], None, False, False, None, True),
