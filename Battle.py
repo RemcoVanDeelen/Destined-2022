@@ -1,5 +1,6 @@
 import os
 from Player_class import *
+import Core
 from random import randint
 
 in_turn = IntVar()
@@ -107,6 +108,9 @@ data = []
 
 # Display functions:
 def place_bg(location):
+
+    Core.can_escape = False
+
     scr.bg = PhotoImage(file="images/Backgrounds/"+location+".png".replace("/", os.sep)).zoom(10, 10)
     scr.create_image(1920/2, 1080/2, image=scr.bg, tag="bg_img")
 
@@ -236,6 +240,11 @@ inventory_frame.pack_propagate(False)
 
 
 def battle(players: list[Player], enemies: list, location):
+    win.unbind("<w>")
+    win.unbind("<a>")
+    win.unbind("<s>")
+    win.unbind("<d>")
+    win.unbind("<r>")
     if enemies[0].name == "Training dummy":
         players[0].health = 1
 
@@ -387,6 +396,7 @@ def battle(players: list[Player], enemies: list, location):
     for foe in enemies:
         if foe.health <= 0:
             print(foe.soul, ", ", end="", sep="")
+    print()
     
     for player in players:
         scr.tag_raise(player.disp.tag)
@@ -403,6 +413,12 @@ def battle(players: list[Player], enemies: list, location):
             if child != player.disp:
                 child.place_forget()
 
+    Core.can_escape = True
+    win.bind("<w>", players[0].move)
+    win.bind("<a>", players[0].move)
+    win.bind("<s>", players[0].move)
+    win.bind("<d>", players[0].move)
+    win.bind("<r>", players[0].interact)
     scr.delete("bg_img")
     scr.delete("battle_frame")
     scr.delete("label_frame")

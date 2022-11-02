@@ -1,7 +1,6 @@
 from Test_room_definitions import *
+import Core
 import sys
-
-Player1 = Player("Player1")  # PLAYER location moved here for tile-combat and saving to file.
 
 
 # Save and load functions:
@@ -100,21 +99,21 @@ def select_file():
 
 def checkpoint():
     glob = sys.modules["__main__"].global_list
-    Player1.checkpoint = [Player1.position[0], Player1.position[1], list(glob.keys())[list(glob.values()).index(Player1.room)]]
+    Player1.checkpoint = [Player1.position[0], Player1.position[1],
+                          list(glob.keys())[list(glob.values()).index(Player1.room)]]
     print("checkpoint reached:", Player1.checkpoint)
     save_to_file()
 
 
 # Escape menu functions
 def open_escape_menu(*bound):
-    if not scr.find_withtag("bg_img"):  # if not in battle:
+    if Core.can_escape:
         # Unbind all
         win.unbind("<w>", )
         win.unbind("<d>", )
         win.unbind("<s>", )
         win.unbind("<a>", )
         win.unbind("<r>", )
-        win.unbind("<l>", )
 
         win.bind("<Escape>", close_escape_menu)
 
@@ -137,7 +136,6 @@ def close_escape_menu(*bound):
     win.bind("<s>", Player1.move)
     win.bind("<a>", Player1.move)
     win.bind("<r>", Player1.interact)
-    win.bind("<l>", lambda bound: battle([Player1], [test_foe1, test_foe2], "TestBackground"))
 
     # Remove Escape GUI
     scr.delete("BG_rectangle")
@@ -167,7 +165,6 @@ def open_main_menu():
     win.unbind("<s>", )
     win.unbind("<a>", )
     win.unbind("<r>", )
-    win.unbind("<l>", )
     win.unbind("<Escape>", )
 
     Player1.room.unload()
@@ -190,7 +187,6 @@ def open_settings_menu():
     win.unbind("<s>", )
     win.unbind("<a>", )
     win.unbind("<r>", )
-    win.unbind("<l>", )
     win.unbind("<Escape>", )
 
     main_menu_button.place(x=960 - 120, y=250)

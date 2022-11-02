@@ -19,7 +19,7 @@ class Player:
         self.inventory = []
         self.spells = []
         self.weapon = None
-        self.gold = 0
+        self.gold = 80
 
         # Battle statistics:
         self.status = []
@@ -183,3 +183,5 @@ battle_axe = Weapon(4, 1, 1, -2)
 sword = Weapon(3, 0, 0, 0)
 short_sword = Weapon(2, -1, -1, +2)
 daggers = Weapon(1, -2, -2, +4)
+
+Player1 = Player("Player1")  # PLAYER location moved here for tile-combat and saving to file.

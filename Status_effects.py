@@ -3,7 +3,7 @@ class Effect:
         """
         Effect class:
 
-        used to define any status effect given.
+        Used to define any status effect given.
 
         - time: defines when to trigger
         - effect: defines effect function (included in class)
