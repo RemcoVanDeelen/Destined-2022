@@ -38,12 +38,13 @@ class Animation:
 
     def roll(self, called=False):
         if not called:
-            while self.frame >= len(self.gif):
-                self.frame -= 1
-            if not self.parent.find_withtag(self.tag):
-                self.frame = 0
-                self.parent.create_image(self.coords[0], self.coords[1], image=self.gif[self.frame], tag=self.tag)
-            self.rolling = True
+            if len(self.gif) > 1:
+                while self.frame >= len(self.gif):
+                    self.frame -= 1
+                if not self.parent.find_withtag(self.tag):
+                    self.frame = 0
+                    self.parent.create_image(self.coords[0], self.coords[1], image=self.gif[self.frame], tag=self.tag)
+                self.rolling = True
 
         if self.rolling:
             if called:

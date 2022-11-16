@@ -1,5 +1,6 @@
 import os
 from Player_class import *
+from Status_effects import *
 import Core
 from random import randint
 
@@ -14,6 +15,16 @@ def end_turn(stamina_return):  # function for ending turns, spell in put is afte
     data[2].stamina += stamina_return
     if data[2].stamina > data[2].max_stamina:
         data[2].stamina = data[2].max_stamina
+
+    for status in data[2].status:
+        if status.effect == "staminaless":
+            print(status.effect, "ticked down to", status.duration)
+            status.tick(data)
+            if status.duration == 0:
+                data[2].status.remove(status)
+                data[2].light_atk_cost += 2
+                data[2].heavy_atk_cost += 2
+
     in_turn.set(1)
 
 
@@ -43,21 +54,22 @@ def deal_damage(attacker=None, target=None, is_melee=True, exact_damage=0, perce
     post_addition = 0
 
     # Attacker effects:
-    for status_effect in attacker.status:
-        if is_melee:                                                            # The following effects are only for melee attacks.
-            if status_effect.effect in ["enchanted_weapon"]:                    # Checks for attacker effects that add DMG values after multiplier.
-                post_addition += status_effect.tick(data)
-            elif status_effect.effect in ["enchanted_weapon_empowered"]:        # Checks for attacker effects that add DMG values before multiplier.
-                pre_addition += status_effect.tick(data)
-            elif status_effect.effect in ["strength"]:                          # Checks for attacker effects that affect the DMG multiplier.
-                dmg_multiplier += status_effect.tick(data)
+    if attacker is not None:
+        for status_effect in attacker.status:
+            if is_melee:                                                            # The following effects are only for melee attacks.
+                if status_effect.effect in ["enchanted_weapon"]:                    # Checks for attacker effects that add DMG values after multiplier.
+                    post_addition += status_effect.tick(data)
+                elif status_effect.effect in ["enchanted_weapon_empowered"]:        # Checks for attacker effects that add DMG values before multiplier.
+                    pre_addition += status_effect.tick(data)
+                elif status_effect.effect in ["strength"]:                          # Checks for attacker effects that affect the DMG multiplier.
+                    dmg_multiplier += status_effect.tick(data)
 
-            if status_effect.duration == 0:
-                attacker.status.remove(status_effect)                           # Removes effects that are no longer in effect.
+                if status_effect.duration == 0:
+                    attacker.status.remove(status_effect)                           # Removes effects that are no longer in effect.
 
-                if status_effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:     # Sets cooldown for Enchant_weapon Spell in needs be.
-                    _ = next((spell for spell in attacker.spells if spell.name == "enchant_weapon"), None)
-                    _.cooldown = 3  # FILLER cooldown
+                    if status_effect in ["enchanted_weapon", "enchanted_weapon_empowered"]:     # Sets cooldown for Enchant_weapon Spell in needs be.
+                        _ = next((spell for spell in attacker.spells if spell.name == "enchant_weapon"), None)
+                        _.cooldown = 3  # FILLER cooldown
 
     # Target effects:
     for status_effect in target.status:
@@ -95,6 +107,8 @@ img_return_button = PhotoImage(file="images/Battle_GUI/ReturnButtonTest.png".rep
 img_heavy_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Heavy_atk.png".replace("/", os.sep)).zoom(6, 6)
 img_light_attack_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Light_atk.png".replace("/", os.sep)).zoom(6, 6)
 
+img_defend_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Defend.png".replace("/", os.sep)).zoom(6, 6)
+img_run_button = PhotoImage(file="images/Battle_GUI/ButtonTest-Run.png".replace("/", os.sep)).zoom(6, 6)
 
 img_battle_frame = PhotoImage(file="images/Battle_GUI/BattleMenuTest.png".replace("/", os.sep)).zoom(5, 5)
 img_text_label_frame = PhotoImage(file="images/Battle_GUI/TextLabelTest.png".replace("/", os.sep)).zoom(5, 5)
@@ -144,9 +158,13 @@ def place_spells():
         child.place_forget()
     placed_buttons = []
 
-    for spell in data[2].spells:
+    learned_spells = data[2].spells.copy()
+    while None in learned_spells:
+        learned_spells.remove(None)
+
+    for spell in learned_spells:
         button = Button(scr, image=spell.image, borderwidth=0, highlightthickness=0, activebackground="#000000", command=lambda _=spell: _.use(data))
-        button.place(x=1920/(len(data[2].spells)+1)*(data[2].spells.index(spell)+1)-48*3, y=845)
+        button.place(x=1920/(len(learned_spells)+1)*(learned_spells.index(spell)+1)-48*3, y=845)
 
         if spell.cooldown > 0:
             button.configure(state="disabled")
@@ -201,7 +219,10 @@ def place_actions():
     global placed_buttons
     for child in placed_buttons:
         child.place_forget()
-    placed_buttons = []
+    placed_buttons = [defend_button, run_button]
+
+    defend_button.place(x=1920 / 3 - 48 * 3, y=845)
+    run_button.place(x=1920 / 3 * 2 - 48 * 3, y=845)
 
 
 # melee attack functions
@@ -234,7 +255,25 @@ heavy_attack_button = Button(scr, image=img_heavy_attack_button, borderwidth=0, 
 inventory_frame = Frame(scr, width=scr.winfo_screenwidth() - 40, height=scr.winfo_screenheight() // 4 + 40, bg="#554466")
 inventory_frame.pack_propagate(False)
 
-# = Bag button creation and placement and other... requires revision =
+# = Action creation =
+
+
+def defend():
+    global data
+    data[2].status.append(Effect("start", "defending", 1))
+    print("Player defends")
+    end_turn(3)
+
+
+def run():
+    global data
+    print("Player ran away")
+    data = ["exit"]
+    in_turn.set(1)
+
+
+defend_button = Button(scr, image=img_defend_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=defend)
+run_button = Button(scr, image=img_run_button, borderwidth=0, highlightthickness=0, activebackground="#000000", command=run)
 
 # """  # ---------------- Display setting ----------------
 
@@ -245,8 +284,6 @@ def battle(players: list[Player], enemies: list, location):
     win.unbind("<s>")
     win.unbind("<d>")
     win.unbind("<r>")
-    if enemies[0].name == "Training dummy":
-        players[0].health = 1
 
     # Battle display prep
 
@@ -259,10 +296,10 @@ def battle(players: list[Player], enemies: list, location):
     players[0].stamina_label.place(x=100, y=1080 // 4 * 3 - 130)
 
     for foe in enemies:
-        foe.image = Button(scr, image=foe.display, command=lambda _=foe: print(_.name), border=0, highlightthickness=0, activebackground="#000000", bg="#000000")
-        foe.image.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50)
-        foe.health_label = Label(scr, text="HP="+str(foe.health))
-        foe.health_label.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1)-(enemies.index(foe)+1)*96*2.5+(96*1.25*len(enemies)), y=50+96*2.5)
+        foe.image = Button(scr, image=foe.display, command=lambda _=foe: print(_.name), border=2, relief="flat", highlightthickness=0, activebackground="#000000", bg="#000000")
+        foe.image.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1), y=50, anchor="n")
+        foe.health_label = Label(scr, text=f"{foe.name} | HP:  {foe.health}".center(35), font=("Berlin Sans FB Demi", 14), fg="#601010", bg="#7A7AAA")
+        foe.health_label.place(x=1920/(len(enemies)+1)*(enemies.index(foe)+1), y=50+96*2.5+3, anchor="n")
 
     # Decide turn order:
     turn_order = []
@@ -304,7 +341,6 @@ def battle(players: list[Player], enemies: list, location):
     print("\n Enemies: ", end="")
     for _ in enemies:
         print(_.name, end=", ")
-    print("\n")
 
     while len(living_players) > 0 and len(living_foe) > 0:
         battler = turn_order[turn]
@@ -312,7 +348,11 @@ def battle(players: list[Player], enemies: list, location):
         turn_total += 1
         if turn >= len(turn_order):
             turn = 0
-        print("/", turn_total, "\\")
+
+        if battler in players:
+            print("\n/", turn_total, "\\", "= Player")
+        else:
+            print("\n/", turn_total, "\\", "-", battler.name)
 
         if battler.health <= 0:
             print(battler.name, "is dead")
@@ -323,13 +363,15 @@ def battle(players: list[Player], enemies: list, location):
         # During turn
         for status_effect in battler.status:
             if status_effect.time == "start":
+                print(status_effect.effect, "ticked down to", status_effect.duration)
                 status_effect.tick(data)
-                if status_effect.duration == 0:
+                if status_effect.duration == 0 or status_effect.effect == "defending":
                     battler.status.remove(status_effect)
 
         data = [living_players, living_foe, battler]
         has_stasis = next((effect for effect in battler.status if effect.effect == "stasis_effect"), None)
         if has_stasis is not None:
+            print(has_stasis.effect, "ticked down to", has_stasis.duration)
             has_stasis.tick(data)
             if has_stasis.duration <= 0:
                 battler.status.remove(has_stasis)
@@ -339,8 +381,9 @@ def battle(players: list[Player], enemies: list, location):
                 for button in placed_buttons:
                     button.configure(state="normal")
                 for spell in battler.spells:
-                    if spell.cooldown > 0:
-                        spell.cooldown -= 1
+                    if spell is not None:
+                        if spell.cooldown > 0:
+                            spell.cooldown -= 1
 
                 checked_items = []
                 for item in battler.inventory:
@@ -352,10 +395,15 @@ def battle(players: list[Player], enemies: list, location):
 
             battler.turn(data)
 
+        if data == ["exit"]:
+            data = [living_players, living_foe, battler]
+            break
+
         data = [living_players, living_foe, battler]
 
         for status_effect in battler.status:
             if status_effect.time == "end":
+                print(status_effect.effect, "ticked down to", status_effect.duration)
                 status_effect.tick(data)
                 if status_effect.duration == 0:
                     battler.status.remove(status_effect)
@@ -366,12 +414,15 @@ def battle(players: list[Player], enemies: list, location):
         for battler in turn_order:
             for status_effect in battler.status:
                 if status_effect.time == "always":
+                    print(status_effect.effect, "ticked down to", status_effect.duration)
                     status_effect.tick([living_players, living_foe, battler])
                     if status_effect.duration == 0:
                         battler.status.remove(status_effect)
-            battler.health_label.configure(text="HP="+str(battler.health))
             if battler in living_players:
+                battler.health_label.configure(text="HP="+str(battler.health))
                 battler.stamina_label.configure(text="STA=" + str(battler.stamina))
+            else:
+                battler.health_label.configure(text=f"{battler.name} | HP:  {battler.health}".center(35))
 
             if battler.health <= 0:
                 if battler in living_foe:
@@ -396,17 +447,32 @@ def battle(players: list[Player], enemies: list, location):
     for foe in enemies:
         if foe.health <= 0:
             print(foe.soul, ", ", end="", sep="")
-    print()
-    
+    print("\n")
+
     for player in players:
         scr.tag_raise(player.disp.tag)
         player.status = []
         for spell in player.spells:
-            spell.cooldown = 0
-            if spell.name == "slow_time":
-                spell.cooldown = 1
+            if spell is not None:
+                spell.cooldown = 0
+                if spell.name == "slow_time":
+                    spell.cooldown = 1
+        player.stamina = player.max_stamina
+        for item in player.inventory:
+            item.cooldown = 0
+        while player.soul >= 15:
+            player.level += 1
+            print(f"Player level increased to {player.level}!\n")
+            player.max_health += 5
+            player.health += 5
+            player.damage += 1
+            player.soul -= 15
+
     for foe in enemies:
-        foe.health = foe.max_health
+        foe.health = foe.base_max_health
+        foe.max_health = foe.base_max_health
+        foe.met_requirements = []
+        foe.turn_prior = 'passed'
         foe.status = []
     for child in scr.winfo_children():
         for player in players:

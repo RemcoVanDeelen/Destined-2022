@@ -2,34 +2,42 @@ from Anim_class import *
 
 
 class Room:
-    def __init__(self, tiles, width, height):
+    def __init__(self, tiles, width, height, displacement: list[int] = [0, 0]):
         """
-        Basic room class:
-
-        A room holds Tile objects and allows movement between them.
-
-        32x18 size room is large enough to fill a 1920x1080 screen.
-        A room this size requires 578 lines of code,
-        for this reason tool use is advised when creating rooms (Dave can help).
+        Basic room class:\n
+        \n
+        A room holds Tile objects and allows movement between them.\n
+        \n
+        32x18 size room is large enough to fill a 1920x1080 screen.\n
+        A room this size requires 578 lines of code,\n
+        for this reason tool use is advised when creating rooms (Dave can help).\n
+        \n
+        To center rooms smaller than 32x18 a displacement is required.\n
+        Displacement = [(32-width)/2 , (18-height)/2]\n
+        Displacement should also be applied to all tiles in room manually.
         """
         self.width = width
         self.height = height
         self.tiles = tiles
+        self.displacement = displacement
 
         for a in range(0, height):
-            setattr(self, "Y_"+str(a), [])
+            setattr(self, "Y_"+str(a+displacement[1]), [])
             for b in range(0, width):
                 t = a*width+b
-                getattr(self, "Y_"+str(a)).append(tiles[t])
+                getattr(self, "Y_"+str(a+displacement[1])).append(tiles[t])
 
     def load(self):
+        """Displays room on screen."""
         for tile in self.tiles:
             tile.display()
 
     def unload(self):
+        """Removes room from screen."""
         for tile in self.tiles:
             if tile.disp is not None:
                 tile.disp.parent.delete(tile.disp.tag)
+                tile.disp.cancel()
 
 
 class Tile:
@@ -56,25 +64,35 @@ class Tile:
         self.wall = wall
 
     def display(self):
-        pos = [self.pos[0] * 48 * 5 / 4 + 24 * 5 / 4, self.pos[1] * 60 + 30]
+        """Displays tile on screen, based on coordinates"""
+        pos = [self.pos[0] * 60 + 30, self.pos[1] * 60 + 30]
         if self.framerate is None:
             self.disp = Animation(self.parent, coords=pos, gif=self.sprite, repeats=self.animated)
         else:
-            self.disp = Animation(self.parent, coords=pos, gif=self.sprite, framerate=self.framerate, repeats=self.animated)
-        self.disp.roll()
+            self.disp = Animation(self.parent, coords=pos, gif=self.sprite, framerate=self.framerate,
+                                  repeats=self.animated)
+        if self.animated:
+            self.disp.roll()
 
     def activate(self):
+        """If it can, triggers tile.act()."""
         if self.act is not None:
             self.act()
 
 
 def door(old: Room, new: Room, parent, player, camera=[0, 0], location=[0, 0], warp=False):
+    """changes the players room and loads and unload accordingly.\n
+     If player location changes, set warp to True. player.warp is then called to warp the player to the new tile.\n
+     If warp is False, location variable is ignored."""
     old.unload()
-    parent.xview_moveto(camera[0])
-    parent.yview_moveto(camera[1])
     new.load()
     parent.tag_raise(player.disp.tag)
     player.room = new
     if warp:
-        player.warp(location, new)
         player.stop = True
+        player.warp(location, new)
+
+    parent.xview_moveto(0)
+    parent.yview_moveto(0)
+    parent.xview_scroll(camera[0], "units")
+    parent.yview_scroll(camera[1], "units")

@@ -1,0 +1,72 @@
+layout:
+         __                                                       __
+         |                                   _________             |
+                                             |       |
+                                             |   A   |
+                                             |_______|
+
+                                                 |
+                                            ______________
+                                            |            |
+                                            |     3      |
+                                            |____________|
+
+                                                |
+                                                |
+                   ______________       ______________
+                   |            |       |            |
+                   |     1      |  ---  |     2      |
+                   |____________|       |____________|
+         |_                                                       _|
+
+Rooms:
+=  = 1:
+	- Description:
+	  |Small town with small training setup, and stalls for items and spells.
+	
+	- Contains:
+	  |Training Dummy,
+
+	  |Battle Axe,
+	  |Sword,
+	  |Short Sword,
+	 
+ 	  | 3 Store stalls for spells (choice of 1 of 3 spells each),
+	  | 1 Store stall for basic items.
+
+
+=  = 2:
+	- Description:
+	  |Small field with town border on west side and forest border on north side.
+	
+	- Contains:
+	  |1/15 chance to trigger fight on grass tiles. Fights are against 1-3 random enemies.
+
+
+=  = 3:
+	- Description:
+	  |Bright forest with path splitting north and east, small campsite with
+	  |checkpoint. The path leads to hut and forest wall.
+	
+	- Contains:
+	  |Checkpoint,  
+
+
+
++  + A:
+	- Description:
+	  |Wooden hut, item store on backside, left and right walls hold spells.
+	  |Single weapon rack in right back side. 
+	
+	- Contains:
+	  |Purple things for final 2 spells (choice of 1 of 3 spells each).
+	  |Store for advanced items.
+	  |Weapon rack with Hammer and Daggers.
+
+
+
+
+
+
+
+

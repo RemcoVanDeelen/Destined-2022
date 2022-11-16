@@ -1,4 +1,5 @@
 from Core import *
+import os
 from Room_class import *
 
 
@@ -17,7 +18,7 @@ class Player:
         """
         # Inventories:
         self.inventory = []
-        self.spells = []
+        self.spells = [None, None, None, None, None]
         self.weapon = None
         self.gold = 80
 
@@ -41,9 +42,8 @@ class Player:
         self.tile = None
         self.coordinates = [self.position[0] * 48 * 5 / 4 + 24 * 5 / 4,  self.position[1] * 60]
         self.room = None
-        self.running = False
         self.moving = False
-        self.move_delay = 400
+        self.move_delay = 280    # 280 base
 
         # Imagery
         self.tag = tag
@@ -55,21 +55,46 @@ class Player:
         self.idle_n_sprites = []
         for ind in range(0, 6):
             self.idle_n_sprites.append(
-                PhotoImage(file="images/Movement_GUI/player_idle_N.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_N.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
         self.idle_e_sprites = []
         for ind in range(0, 6):
             self.idle_e_sprites.append(
-                PhotoImage(file="images/Movement_GUI/player_idle_E.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_E.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
         self.idle_s_sprites = []
         for ind in range(0, 6):
             self.idle_s_sprites.append(
-                PhotoImage(file="images/Movement_GUI/player_idle_S.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_S.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
         self.idle_w_sprites = []
         for ind in range(0, 6):
             self.idle_w_sprites.append(
-                PhotoImage(file="images/Movement_GUI/player_idle_W.gif", format="gif -index {}".format(ind)).zoom(10, 10).subsample(4, 4))
+                PhotoImage(file="images/Movement_GUI/player_idle_W.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
 
-        self.idle_framerate = [200, 90, 105, 200, 105, 90]
+        self.movement_n_sprites = []
+        for ind in range(0, 6):
+            self.movement_n_sprites.append(
+                PhotoImage(file="images/Movement_GUI/player_movement_N.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
+        self.movement_e_sprites = []
+        for ind in range(0, 6):
+            self.movement_e_sprites.append(
+                PhotoImage(file="images/Movement_GUI/player_movement_E.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
+        self.movement_s_sprites = []
+        for ind in range(0, 6):
+            self.movement_s_sprites.append(
+                PhotoImage(file="images/Movement_GUI/player_movement_S.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
+        self.movement_w_sprites = []
+        for ind in range(0, 6):
+            self.movement_w_sprites.append(
+                PhotoImage(file="images/Movement_GUI/player_movement_W.gif", format=f"gif -index {ind}"
+                           .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
+
+        self.idle_framerate = [100, 90, 105, 100, 105, 90]
 
         self.movement_sprites = []
         self.battle_sprites = []
@@ -78,6 +103,10 @@ class Player:
 
     #                                       Movement functions:                                     #
     def move(self, event):
+        """Function bound to wasd keys.\n
+         Moves player and triggers tile.activate()\n
+         Cannot move player out of bounds or into walls.\n
+         Temporarily changes sprite to movement then returns to idle."""
         if not self.moving:
             temp_pos = [self.position[0], self.position[1]]
             if event.keysym == "w" or event.keysym == "Up":
@@ -92,17 +121,25 @@ class Player:
             if event.keysym == "a" or event.keysym == "Left":
                 self.facing = W
                 temp_pos[0] -= 1
-            self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
+            self.disp.gif = getattr(self, "movement_" + self.facing + "_sprites")
             scr.itemconfigure(self.tag, image=self.disp.gif[self.disp.frame])
-            if not getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]].wall:
-                self.tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]]
+
+            # Wall detection:
+            if self.room.width > temp_pos[0]-self.room.displacement[0] >= 0 \
+                    and self.room.height > temp_pos[1]-self.room.displacement[1] >= 0 \
+                    and not getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]-self.room.displacement[0]].wall:
+
+                self.tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]-self.room.displacement[0]]
                 self.moving = True
                 self.position = temp_pos
                 self.movement(self.facing)
                 if not self.tile.interact:
                     self.tile.activate()
+            else:
+                self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
 
     def movement(self, direction, delay=0):
+        """Internal function for moving display when moving."""
         if not self.stop:
             if delay < self.move_delay:
                 win.after(int(self.move_delay/8), lambda: self.movement(direction, delay+int(self.move_delay/8)))
@@ -116,12 +153,15 @@ class Player:
                     self.coordinates[1] += 7.5
                 scr.coords(self.tag, self.coordinates[0], self.coordinates[1])
             else:
+                self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
                 self.moving = False
         else:
+            self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
             self.stop = False
             self.moving = False
 
-    def interact(self, binds):
+    def interact(self, *_):
+        """Function for activating the tile the player is facing."""
         temp_pos = [self.position[0], self.position[1]]
         if self.facing == N:
             temp_pos[1] -= 1
@@ -131,40 +171,57 @@ class Player:
             temp_pos[1] += 1
         if self.facing == W:
             temp_pos[0] -= 1
-        tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]]
 
-        if tile.interact:
-            tile.activate()
+        try:
+            tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]-self.room.displacement[0]]
+            if tile.interact:
+                tile.activate()
+        except AttributeError:
+            pass
 
     def warp(self, destination, room, activate=False):
+        """Warp function for player movement without animation, to any tile, to any room."""
         if room != self.room:
             door(self.room, room, scr, self, location=destination)
         self.position = destination
         self.coordinates = [self.position[0] * 48 * 5 / 4 + 24 * 5 / 4,  self.position[1] * 60]
         scr.coords(self.tag, self.coordinates[0], self.coordinates[1])
 
-        self.tile = getattr(self.room, "Y_"+str(destination[1]))[destination[0]]
+        self.tile = getattr(self.room, "Y_"+str(destination[1]))[destination[0]-self.room.displacement[0]]
 
         if activate:
             self.tile.activate()
 
     #                                   Battle functions:                                         #
     def turn(self, data):
+        """Internal function required for battle. \n
+        Since player turn is defined in Battle.py, this function simply passes."""
         pass
 
 
 class Weapon:
     def __init__(self, damage_modifier, light_atk_cost, heavy_atk_cost, speed_modifier):
+        """Weapon modifier for player.\n
+        Weapon affects:\n
+        - damage,
+        - both melee stamina costs,
+        - speed.
+        Only 1 weapon can be equipped at a time.
+        """
         self.damage_modifier = damage_modifier
         self.light_atk_cost = light_atk_cost
         self.heavy_atk_cost = heavy_atk_cost
         self.speed_modifier = speed_modifier
 
     def equip(self, player):
+        """Switches equipped weapon for self.\n
+         Applies own stats to player."""
         print("Player equipped", self, "over", player.weapon)
+        # un-equips current weapon
         if player.weapon:
             player.weapon.un_equip(player)
 
+        # apply stats
         player.weapon = self
         player.damage += self.damage_modifier
         player.light_atk_cost += self.light_atk_cost
@@ -172,16 +229,23 @@ class Weapon:
         player.speed += self.speed_modifier
 
     def un_equip(self, player):
+        """Removes own stats from player. \n
+        Sets player weapon to none."""
+        # removes stats.
         player.damage -= self.damage_modifier
         player.light_atk_cost -= self.light_atk_cost
         player.heavy_atk_cost -= self.heavy_atk_cost
         player.speed -= self.speed_modifier
 
+        # sets player weapon to none.
+        player.weapon = None
 
+
+# Objects:
 hammer = Weapon(5, 2, 2, -4)
 battle_axe = Weapon(4, 1, 1, -2)
 sword = Weapon(3, 0, 0, 0)
 short_sword = Weapon(2, -1, -1, +2)
 daggers = Weapon(1, -2, -2, +4)
 
-Player1 = Player("Player1")  # PLAYER location moved here for tile-combat and saving to file.
+Player1 = Player("Player1")
