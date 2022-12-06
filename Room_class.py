@@ -1,7 +1,16 @@
+"""
+Room_class.py
+--
+
+This file holds the class for Room and Tile objects.
+It also holds the most general use functions for these objects.
+"""
+
 from Anim_class import *
 
 
 class Room:
+    """EEE"""
     def __init__(self, tiles, width, height, displacement: list[int] = [0, 0]):
         """
         Basic room class:\n
@@ -9,7 +18,7 @@ class Room:
         A room holds Tile objects and allows movement between them.\n
         \n
         32x18 size room is large enough to fill a 1920x1080 screen.\n
-        A room this size requires 578 lines of code,\n
+        A room this size requires roughly 578 lines of code,\n
         for this reason tool use is advised when creating rooms (Dave can help).\n
         \n
         To center rooms smaller than 32x18 a displacement is required.\n
@@ -41,7 +50,7 @@ class Room:
 
 
 class Tile:
-    def __init__(self, parent, pos: tuple, sprite, act=None, interact=False, animated=False, framerate=None, wall=False):
+    def __init__(self, parent, pos, sprite, act, interact, animated, framerate, wall):
         """
         Basic tile class:
 
@@ -52,16 +61,25 @@ class Tile:
 
         - Tile(scr, (3, 0), [FightImage], lambda: battle([Player1], [Dummy], "TestBackground"), True, False, [], True),
 
+        Parameters:
+            parent:     tkinter.Canvas
+            pos:        tuple
+            sprite:     PhotoImage
+            act:        function
+            interact:   boolean
+            animated:   boolean
+            framerate:  list
+            wall:       boolean
         """
         self.pos = pos  # position in (x, y)
         self.act = act  # Action function
         self.sprite = sprite  # Displayed PhotoImage
-        self.interact = interact  # Whether self.act() happens upon interaction (True), or else upon entering (False)
+        self.interact = interact  # Whether self.act() happens upon interaction (True), or upon entering (False)
         self.animated = animated  # Whether the displayed image is animated or not
-        self.disp = None
-        self.parent = parent
-        self.framerate = framerate
-        self.wall = wall
+        self.disp = None  # display object from Anim_class.py (made by display function)
+        self.parent = parent  # parent tkinter.Canvas
+        self.framerate = framerate  # framerate list for animations
+        self.wall = wall  # blocks player movement
 
     def display(self):
         """Displays tile on screen, based on coordinates"""
@@ -81,9 +99,11 @@ class Tile:
 
 
 def door(old: Room, new: Room, parent, player, camera=[0, 0], location=[0, 0], warp=False):
-    """changes the players room and loads and unload accordingly.\n
-     If player location changes, set warp to True. player.warp is then called to warp the player to the new tile.\n
-     If warp is False, location variable is ignored."""
+    """
+    Changes the players room and loads and unload accordingly.\n
+    If player location changes, set warp to True. player.warp is then called to warp the player to the new tile.\n
+    If warp is False, location variable is ignored.
+     """
     old.unload()
     new.load()
     parent.tag_raise(player.disp.tag)

@@ -1,23 +1,18 @@
 # Destined-2022
 
 ---
------ Current goals: -----
+Destined-2022 is a Demo version, showcasing some functionality that 
+could be used in a complete game.
 
-* Polishing of combat and movement systems,
-* Soul levels (exp and level up system),
-* Inventory menus and shops,
-* Completion of passive spells.
+It is consists of:
+ - 12 .py files holding the code, 
+ - 3 .txt save-files for game states, 
+ - 1 .txt save-file for settings. 
+ - 1 empty _requirements.txt_ file,
+ - 1 _Guide.md_ file.
 
----
------ Commit layout: -----
+To run the game you must run ***main.py***.
 
-Changed systems:    (+ number of consecutive commits with said systems)
-
-Files with mayor changes:
-
- \- Small description of changes made and goal of changes,
-
-Possible Notes:
-
-Current goal for next Push
- 
+For a basic introduction to the games mechanics and
+an in-depth explanation of the more complex systems, see _Guide.md_.
+It is recommended to read the simple guide provided in Guide.md.

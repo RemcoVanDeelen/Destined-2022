@@ -1,3 +1,12 @@
+"""
+Status_effects.py
+--
+
+This file holds all status effects in a single class.
+Examples of how to use are shown at the bottom of the file.
+"""
+
+
 class Effect:
     def __init__(self, time, effect, duration):
         """
@@ -37,16 +46,6 @@ class Effect:
             data[2].health = data[2].max_health
         self.duration -= 1
 
-    def foresight_effect(self, _):                   # not implemented.
-        """~NOT IMPLEMENTED~\n
-        Foresight effect, would increase stats of effected."""
-        self.duration -= 1
-
-    def opponent_foresight_effect(self, _):          # not implemented.
-        """~NOT IMPLEMENTED~\n
-        Foresight effect [opponent], would decrease stats of effected."""
-        self.duration -= 1
-
     def enchanted_weapon(self, _):
         """Enchanted weapon effect, adds 4 post-calculation damage to melee attacks."""
         self.duration -= 1
@@ -57,20 +56,10 @@ class Effect:
         self.duration -= 1
         return 8
 
-    def barrier_effect(self, _):                 # not implemented.
-        """~NOT IMPLEMENTED~\n
-        Barrier effect, would add small damage taken decrease to effected."""
+    def barrier(self, _):
+        """Barrier effect, adds small damage taken decrease to effected."""
         self.duration -= 1
-
-    def opponent_barrier_effect(self, _):                 # not implemented.
-        """~NOT IMPLEMENTED~\n
-        Barrier effect [opponent], would decrease stats of effected."""
-        self.duration -= 1
-
-    def opponent_barrier_effect_empowered(self, _):          # not implemented.
-        """~NOT IMPLEMENTED~\n
-        Barrier effect [opponent, empowered], would greatly decrease stats of effected."""
-        self.duration -= 1
+        return 0.2
 
     def weakened(self, _):
         """Weakened effect, adds small damage taken increase to effected."""
@@ -114,37 +103,24 @@ class Effect:
         return 0.2
 
     def staminaless(self, _):
-        """Staminaless effect, decreases stamina cost for melee attacks of effected."""
+        """Staminaless effect, decreases stamina cost for melee attacks of effected.
+        * See use in Battle.py for effect code."""
         self.duration -= 1
 
     def defending(self, _):
         """Defending effect, adds damage taken decrease to effected."""
         return 0.4
 
+    def opponent_enchanted_weapon(self, _):
+        """Enchanted weapon effect, adds 4 post-calculation damage to melee attacks. [for foes]"""
+        self.duration -= 1
+        return 4
+
 
 '''
 empowered = Effect(0, "empowered", True)
-
 regenerating = Effect("start", "regenerating", 3)
-regenerating_empowered = Effect("start", "regenerating_empowered", 3)
-
-enchanted_weapon = Effect("attacking", "enchanted_weapon", 2)
-enchanted_weapon_empowered = Effect("attacking", "enchanted_weapon_empowered", 2)
-
-weakened = Effect("end", "weakened", 4)
-
-burning = Effect("end", "burning", 3)
-
-venom_effect = Effect("end", "venom", 3)
-venom_effect_empowered = Effect("always", "venom_empowered", 3)
-
-stasis_effect = Effect(0, "stasis_effect", 2)
-
 Effect("attacking", "strength", 4)
-
-Effect("attacked", "shielded", 3)
-
 Effect("attacked", "resistance", 5)
-
 Effect("end", "staminaless", 5)
 '''  # Effect examples

@@ -1,3 +1,11 @@
+"""
+Player_class.py
+--
+
+This file defines the Player and Weapon classes.
+All objects of these classes are defined at the end of the file.
+"""
+
 from Core import *
 import os
 from Room_class import *
@@ -6,15 +14,17 @@ from Room_class import *
 class Player:
     def __init__(self, tag: str):
         """
+        The player object s the most important object in the game and holds almost all changeable data.
+        All attributes other than tag are set to base values and need to be changed after object definition.
+        This is done by loading a SaveFile.
+
         Define a player by giving it a tag.\n
         it will be located at [1, 1] and will not yet be animated. [self.disp.roll]\n
         Functions:\n
-        - MOVE, To be bound to arrow keys or WASD;
+        - MOVE, To be bound to 4 keys for 4 directions;
         - INTERACT, To be bound to any key;
         - WARP;
-        - OTHER {[To Be Added In Future]}.
 
-        :param tag: str | int
         """
         # Inventories:
         self.inventory = []
@@ -32,6 +42,7 @@ class Player:
         self.speed = 10
         self.light_atk_cost = 5
         self.heavy_atk_cost = 8
+        self.focus = 0
 
         self.soul = 0
         self.level = 1
@@ -43,7 +54,7 @@ class Player:
         self.coordinates = [self.position[0] * 48 * 5 / 4 + 24 * 5 / 4,  self.position[1] * 60]
         self.room = None
         self.moving = False
-        self.move_delay = 280    # 280 base
+        self.move_delay = 280    # 280 base, minimum is 10
 
         # Imagery
         self.tag = tag
@@ -94,7 +105,7 @@ class Player:
                 PhotoImage(file="images/Movement_GUI/player_movement_W.gif", format=f"gif -index {ind}"
                            .replace("/", os.sep)).zoom(10, 10).subsample(4, 4))
 
-        self.idle_framerate = [100, 90, 105, 100, 105, 90]
+        self.idle_framerate = [150, 150, 200, 150, 200, 150]
 
         self.movement_sprites = []
         self.battle_sprites = []
@@ -103,32 +114,35 @@ class Player:
 
     #                                       Movement functions:                                     #
     def move(self, event):
-        """Function bound to wasd keys.\n
+        """
+        Function bound to direction keys (such as the arrow keys).\n
          Moves player and triggers tile.activate()\n
          Cannot move player out of bounds or into walls.\n
-         Temporarily changes sprite to movement then returns to idle."""
+         Changes sprite to correct animation (direction faced and movement/idle).
+         """
+
+        # set direction faced to new direction:
         if not self.moving:
             temp_pos = [self.position[0], self.position[1]]
-            if event.keysym == "w" or event.keysym == "Up":
+            if event.keysym == Settings.upKey:
                 self.facing = N
                 temp_pos[1] -= 1
-            if event.keysym == "d" or event.keysym == "Right":
+            if event.keysym == Settings.rightKey:
                 self.facing = E
                 temp_pos[0] += 1
-            if event.keysym == "s" or event.keysym == "Down":
+            if event.keysym == Settings.downKey:
                 self.facing = S
                 temp_pos[1] += 1
-            if event.keysym == "a" or event.keysym == "Left":
+            if event.keysym == Settings.leftKey:
                 self.facing = W
                 temp_pos[0] -= 1
-            self.disp.gif = getattr(self, "movement_" + self.facing + "_sprites")
-            scr.itemconfigure(self.tag, image=self.disp.gif[self.disp.frame])
 
-            # Wall detection:
+            # Wall detection, sprite correction and movement start:
             if self.room.width > temp_pos[0]-self.room.displacement[0] >= 0 \
                     and self.room.height > temp_pos[1]-self.room.displacement[1] >= 0 \
                     and not getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]-self.room.displacement[0]].wall:
 
+                self.disp.gif = getattr(self, "movement_" + self.facing + "_sprites")
                 self.tile = getattr(self.room, "Y_"+str(temp_pos[1]))[temp_pos[0]-self.room.displacement[0]]
                 self.moving = True
                 self.position = temp_pos
@@ -137,20 +151,29 @@ class Player:
                     self.tile.activate()
             else:
                 self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
+            scr.itemconfigure(self.tag, image=self.disp.gif[self.disp.frame])
 
     def movement(self, direction, delay=0):
-        """Internal function for moving display when moving."""
+        """
+        Internal function for moving display when moving.
+        Moves the player display 1/10 of a Tile image in the direction it is facing.
+        Repeats itself 10 times with 1/10 of the move delay.
+        (Cannot delay itself by less than 1 ms)
+
+        Returns player sprite to idle after 10 repeats.
+        """
+
         if not self.stop:
             if delay < self.move_delay:
-                win.after(int(self.move_delay/8), lambda: self.movement(direction, delay+int(self.move_delay/8)))
+                win.after(int(self.move_delay/10), lambda: self.movement(direction, delay+int(self.move_delay/10)))
                 if direction == "e":
-                    self.coordinates[0] += 7.5
+                    self.coordinates[0] += 6
                 if direction == "n":
-                    self.coordinates[1] += -7.5
+                    self.coordinates[1] += -6
                 if direction == "w":
-                    self.coordinates[0] += -7.5
+                    self.coordinates[0] += -6
                 if direction == "s":
-                    self.coordinates[1] += 7.5
+                    self.coordinates[1] += 6
                 scr.coords(self.tag, self.coordinates[0], self.coordinates[1])
             else:
                 self.disp.gif = getattr(self, "idle_" + self.facing + "_sprites")
@@ -161,7 +184,11 @@ class Player:
             self.moving = False
 
     def interact(self, *_):
-        """Function for activating the tile the player is facing."""
+        """
+        Function for activating the tile the player is facing.
+        This function is bound to the interaction key.
+        """
+
         temp_pos = [self.position[0], self.position[1]]
         if self.facing == N:
             temp_pos[1] -= 1
@@ -180,7 +207,11 @@ class Player:
             pass
 
     def warp(self, destination, room, activate=False):
-        """Warp function for player movement without animation, to any tile, to any room."""
+        """
+        Warp function for player movement without animation, to any tile, to any room.
+        Used in combination with Tile.door() function to teleport players to new locations.
+        """
+
         if room != self.room:
             door(self.room, room, scr, self, location=destination)
         self.position = destination
@@ -192,7 +223,6 @@ class Player:
         if activate:
             self.tile.activate()
 
-    #                                   Battle functions:                                         #
     def turn(self, data):
         """Internal function required for battle. \n
         Since player turn is defined in Battle.py, this function simply passes."""
@@ -200,9 +230,9 @@ class Player:
 
 
 class Weapon:
-    def __init__(self, damage_modifier, light_atk_cost, heavy_atk_cost, speed_modifier):
+    def __init__(self, damage_modifier, light_atk_cost, heavy_atk_cost, speed_modifier, name):
         """Weapon modifier for player.\n
-        Weapon affects:\n
+        Weapons affect:\n
         - damage,
         - both melee stamina costs,
         - speed.
@@ -212,11 +242,15 @@ class Weapon:
         self.light_atk_cost = light_atk_cost
         self.heavy_atk_cost = heavy_atk_cost
         self.speed_modifier = speed_modifier
+        self.name = name
 
     def equip(self, player):
-        """Switches equipped weapon for self.\n
-         Applies own stats to player."""
-        print("Player equipped", self, "over", player.weapon)
+        """
+        Switches equipped weapon for self.\n
+        Applies own stats to player.
+        """
+
+        print("Player equipped", self.name, "over", player.weapon.name if player.weapon is not None else None)
         # un-equips current weapon
         if player.weapon:
             player.weapon.un_equip(player)
@@ -229,8 +263,11 @@ class Weapon:
         player.speed += self.speed_modifier
 
     def un_equip(self, player):
-        """Removes own stats from player. \n
-        Sets player weapon to none."""
+        """
+        Removes own stats from player. \n
+        Sets player weapon to none.
+        """
+
         # removes stats.
         player.damage -= self.damage_modifier
         player.light_atk_cost -= self.light_atk_cost
@@ -242,10 +279,10 @@ class Weapon:
 
 
 # Objects:
-hammer = Weapon(5, 2, 2, -4)
-battle_axe = Weapon(4, 1, 1, -2)
-sword = Weapon(3, 0, 0, 0)
-short_sword = Weapon(2, -1, -1, +2)
-daggers = Weapon(1, -2, -2, +4)
+hammer = Weapon(5, 2, 2, -4, "Hammer")
+battle_axe = Weapon(4, 1, 1, -2, "Battle axe")
+sword = Weapon(3, 0, 0, 0, "Sword")
+short_sword = Weapon(2, -1, -1, +2, "Short sword")
+daggers = Weapon(1, -2, -2, +4, "Daggers")
 
 Player1 = Player("Player1")

@@ -1,18 +1,39 @@
+"""
+Anim_class.py
+--
+
+This file holds a class for animating images in tkinter.
+This file has no imports and can be used in other projects as well.
+
+"""
+
+
 class Animation:
-    def __init__(self, parent, coords=[0, 0], tag=None, gif=None, framerate=[], repeats=0, trajectory=[], frame=0, destroy=False, t_repeats=0):
+    def __init__(self, parent,
+                 coords=[0, 0],
+                 tag: str | int = None,
+                 gif=None,
+                 framerate=[],
+                 repeats=0,
+                 trajectory=[],
+                 frame=0,
+                 destroy=False,
+                 t_repeats=0):
         """
         Animation class:
 
         Allows for animating a gif object. \n
          - Use .roll() to animate and .cancel() to cancel.
          - Trajectories are added on coordinates at index frame.
-         - Repeats and t_repeats add to loops, there is alwas One loop, Setting them to True makes it never end.
-         - Destroy = True makes the image disappear once the animation is ended or cancelled.
+         - Repeats and t_repeats (trajectory repeats) add to loops,
+           there is always 1 loop, Setting them to True makes it never end.
+         - Destroy = True makes the image disappear once the animation ends.
          - Framerate is in ms (0.001 s)
 
-        NECESSARY VARIABLES:
+        NECESSARY PARAMETERS:
          * parent = tkinter.Canvas
-         * gif = list
+         * gif = list of PhotoImages
+
         """
 
         self.parent = parent
@@ -37,6 +58,10 @@ class Animation:
         self.parent.create_image(self.coords[0], self.coords[1], image=self.gif[0], tag=self.tag)
 
     def roll(self, called=False):
+        """
+        Starts or continues the animation.
+        Calls itself with self.framerate intervals.
+        """
         if not called:
             if len(self.gif) > 1:
                 while self.frame >= len(self.gif):
@@ -74,10 +99,21 @@ class Animation:
                     self.parent.delete(self.tag)
 
     def call_self(self):
+        """
+        Internal function for self.roll().
+        Continues to next frame and calls self.roll() with Called=True.
+
+        """
         self.frame += 1
         self.roll(True)
 
     def cancel(self, finish=False, destroy=False):
+        """
+        Stops animation
+        :param finish: If true, allows the animation to finish its current cycle
+        :param destroy: If true, removes frame from screen
+        """
+
         if finish:
             self.repeats = 0
         else:

@@ -1,0 +1,2 @@
+:pass: Settings
+{'upKey': 'w', 'rightKey': 'd', 'downKey': 's', 'leftKey': 'a', 'interactKey': 'r', 'inventoryKey': 'i', 'escapeKey': 'Escape'}

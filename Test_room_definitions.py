@@ -1,4 +1,14 @@
-# from Core import *
+"""
+Test_room_definitions.py
+--
+
+This file holds the data for the Room objects and their used images.
+For Room_2, the function for starting fights is also included.
+To generate the code for the room objects, I made a separate program which I call Dave.
+
+Even though some import statements are not used in this file, they are required for the game to run.
+"""
+
 from Player_class import *
 from Enemy_class import *
 from Battle import *
@@ -7,8 +17,9 @@ from Append_menus import *
 from Menus import *
 import sys
 
-# DEMO ROOMS:
-# Room 1:
+# =- DEMO ROOMS: -=
+# - Room 1:
+# images:
 TownWall_Horizontal = PhotoImage(file="images/Movement_GUI/Room_1/TownWall_Horizontal.png"
                                  .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 TownWall_Vertical = PhotoImage(file="images/Movement_GUI/Room_1/TownWall_Vertical.png"
@@ -127,6 +138,7 @@ PotionStoreFloor_K = PhotoImage(file="images/Movement_GUI/Room_1/PotionStoreFloo
 PotionStoreFloor_L = PhotoImage(file="images/Movement_GUI/Room_1/PotionStoreFloor_L.png"
                                 .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 
+# Room object:
 Room_1 = Room([  # Y = 0
                Tile(scr, (0, 0), [TownWall_Vertical], None, False, False, [], True),
                Tile(scr, (1, 0), [TownWall_Horizontal], None, False, False, [], True),
@@ -175,7 +187,7 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (3, 1), WeaponRackShortSword,
                     lambda: display(Player1, ["Would you like to pick up the Short Sword?\n"
                                               "dmg. + 2\nsta. cost - 1\nspd. + 2"],
-                                    [[lambda: battle_axe.equip(Player1), "Yes"], [Core.__pass, "No"]]),
+                                    [[lambda: short_sword.equip(Player1), "Yes"], [Core.__pass, "No"]]),
                     True, True, [500, 100, 100, 100, 100, 100], True),
                Tile(scr, (4, 1), [TrainingGround], None, False, False, [], False),
                Tile(scr, (5, 1), [TrainingGround], None, False, False, [], False),
@@ -748,29 +760,35 @@ Room_1 = Room([  # Y = 0
                Tile(scr, (31, 17), [TownWall_Horizontal], None, False, False, [], True),
                ], 32, 18)
 
-# Room 2:
+# - Room 2:
+# images:
 ForestLineTile = PhotoImage(file="images/Movement_GUI/Room_2/ForestLineTile.png"
                             .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 ForestLineEdge_left = PhotoImage(file="images/Movement_GUI/Room_2/ForestLineEdge_left.png"
                                  .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 ForestLineEdge_right = PhotoImage(file="images/Movement_GUI/Room_2/ForestLineEdge_right.png"
                                   .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestRoof = PhotoImage(file="images/Movement_GUI/Room_2/ForestRoof.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+ForestRoof = PhotoImage(file="images/Movement_GUI/Room_2/ForestRoof.png".replace("/", os.sep)
+                        ).zoom(5, 5).subsample(4, 4)
 GrassTile_1_A = PhotoImage(file="images/Movement_GUI/Room_2/GrassTile_1_A.png"
                            .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 GrassTile_1_B = PhotoImage(file="images/Movement_GUI/Room_2/GrassTile_1_B.png"
                            .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 GrassTile_1_C = PhotoImage(file="images/Movement_GUI/Room_2/GrassTile_1_C.png"
                            .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestEntry = PhotoImage(file="images/Movement_GUI/Room_2/ForestEntry.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+ForestEntry = PhotoImage(file="images/Movement_GUI/Room_2/ForestEntry.png".replace("/", os.sep)
+                         ).zoom(5, 5).subsample(4, 4)
 ForestEntryHigh = PhotoImage(file="images/Movement_GUI/Room_2/ForestEntryHigh.png"
                              .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-TownEntry = PhotoImage(file="images/Movement_GUI/Room_2/TownEntry.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+TownEntry = PhotoImage(file="images/Movement_GUI/Room_2/TownEntry.png".replace("/", os.sep)
+                       ).zoom(5, 5).subsample(4, 4)
 
 
+# function:
 def field_fights(*_):
     """Internal function used by Room_2 field tiles to trigger fights."""
-    if randint(0, 15) == 15:
+    # 1/12 chance to trigger a fight with 1 enemy
+    if randint(0, 12) == 12:
         possible = [field_foe_offence, field_foe_offence2,
                     field_foe_defence, field_foe_defence2,
                     field_foe_support, field_foe_support2,
@@ -778,16 +796,21 @@ def field_fights(*_):
         enemies = [possible[randint(0, 6)]]
         possible.remove(enemies[0])
         rng = randint(0, 10)
+        # chance to add an enemy
         if rng < 5:
             enemies.append(possible[rng])
             possible.remove(possible[rng])
         rng = randint(0, 10)
+        # chance to add another enemy
         if rng < 4:
             enemies.append(possible[rng])
             possible.remove(possible[rng])
+        # Trigger fight
+        Player1.stop = True
         battle([Player1], enemies, "FieldFight")
 
 
+# room object:
 Room_2 = Room([  # Y = 0
                Tile(scr, (0, 0), [TownWall_Vertical], None, False, False, [], True),
                Tile(scr, (1, 0), [ForestLineEdge_left], None, False, False, [], True),
@@ -1393,31 +1416,52 @@ Room_2 = Room([  # Y = 0
                Tile(scr, (31, 17), [GrassTile_1_A], field_fights, False, False, [], False),
                ], 32, 18)
 
-# Room 3:
+# - Room 3:
+# images:
 ForestOutline_1_A = PhotoImage(file="images/Movement_GUI/Room_3/ForestOutline_1_A.png"
                                .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 ForestOutline_1_B = PhotoImage(file="images/Movement_GUI/Room_3/ForestOutline_1_B.png"
                                .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_A = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_A.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_B = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_B.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_C = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_C.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_D = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_D.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_E = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_E.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_F = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_F.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_G = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_G.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_H = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_H.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_I = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_I.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_J = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_J.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_K = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_K.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_L = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_L.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_M = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_M.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_N = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_N.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_O = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_O.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_P = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_P.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_Q = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_Q.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_R = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_R.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_S = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_S.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-ForestHut_T = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_T.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+ForestHut_A = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_A.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_B = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_B.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_C = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_C.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_D = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_D.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_E = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_E.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_F = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_F.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_G = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_G.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_H = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_H.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_I = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_I.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_J = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_J.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_K = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_K.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_L = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_L.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_M = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_M.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_N = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_N.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_O = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_O.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_P = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_P.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_Q = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_Q.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_R = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_R.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_S = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_S.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
+ForestHut_T = PhotoImage(file="images/Movement_GUI/Room_3/ForestHut_T.png".replace("/", os.sep)).zoom(5, 5
+                                                                                                      ).subsample(4, 4)
 GrassTile_2_A = PhotoImage(file="images/Movement_GUI/Room_3/GrassTile_2_A.png"
                            .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 GrassTile_2_B = PhotoImage(file="images/Movement_GUI/Room_3/GrassTile_2_B.png"
@@ -1437,9 +1481,11 @@ ForestBush_1_A = PhotoImage(file="images/Movement_GUI/Room_3/ForestBush_1_A.png"
                             .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 ForestBush_1_B = PhotoImage(file="images/Movement_GUI/Room_3/ForestBush_1_B.png"
                             .replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-FieldEntry = PhotoImage(file="images/Movement_GUI/Room_3/FieldEntry.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+FieldEntry = PhotoImage(file="images/Movement_GUI/Room_3/FieldEntry.png".replace("/", os.sep)
+                        ).zoom(5, 5).subsample(4, 4)
 
 
+# room object:
 Room_3 = Room([  # Y = 0
                Tile(scr, (0, 0), [ForestOutline_1_B], None, False, False, [], True),
                Tile(scr, (1, 0), [ForestOutline_1_A], None, False, False, [], True),
@@ -2046,20 +2092,31 @@ Room_3 = Room([  # Y = 0
                Tile(scr, (31, 17), [ForestBush_1_B], None, False, False, [], True),
                ], 32, 18)
 
-# Room A:
+# - Room A:
+# images:
 HutWall = PhotoImage(file="images/Movement_GUI/Room_A/HutWall.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 WoodFloor = PhotoImage(file="images/Movement_GUI/Room_A/WoodFloor.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutPotions_L = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_L.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutPotions_C = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_C.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutPotions_R = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_R.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutWeaponTop = PhotoImage(file="images/Movement_GUI/Room_A/HutWeaponTop.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutWeapons = PhotoImage(file="images/Movement_GUI/Room_A/HutWeapons.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutMagic_TL = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_TL.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutMagic_BL = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_BL.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutMagic_TR = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_TR.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
-HutMagic_BR = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_BR.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
+HutPotions_L = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_L.png".replace("/", os.sep)
+                          ).zoom(5, 5).subsample(4, 4)
+HutPotions_C = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_C.png".replace("/", os.sep)
+                          ).zoom(5, 5).subsample(4, 4)
+HutPotions_R = PhotoImage(file="images/Movement_GUI/Room_A/HutPotions_R.png".replace("/", os.sep)
+                          ).zoom(5, 5).subsample(4, 4)
+HutWeaponTop = PhotoImage(file="images/Movement_GUI/Room_A/HutWeaponTop.png".replace("/", os.sep)
+                          ).zoom(5, 5).subsample(4, 4)
+HutWeapons = PhotoImage(file="images/Movement_GUI/Room_A/HutWeapons.png".replace("/", os.sep)
+                        ).zoom(5, 5).subsample(4, 4)
+HutMagic_TL = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_TL.png".replace("/", os.sep)
+                         ).zoom(5, 5).subsample(4, 4)
+HutMagic_BL = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_BL.png".replace("/", os.sep)
+                         ).zoom(5, 5).subsample(4, 4)
+HutMagic_TR = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_TR.png".replace("/", os.sep)
+                         ).zoom(5, 5).subsample(4, 4)
+HutMagic_BR = PhotoImage(file="images/Movement_GUI/Room_A/HutMagic_BR.png".replace("/", os.sep)
+                         ).zoom(5, 5).subsample(4, 4)
 HutExit = PhotoImage(file="images/Movement_GUI/Room_A/HutExit.png".replace("/", os.sep)).zoom(5, 5).subsample(4, 4)
 
+# room object:
 Room_A = Room([  # Y = 0
                Tile(scr, (0+11, 0+5), [HutWall], None, False, False, [], True),
                Tile(scr, (1+11, 0+5), [HutWall], None, False, False, [], True),
@@ -2082,9 +2139,9 @@ Room_A = Room([  # Y = 0
                Tile(scr, (7+11, 1+5), [HutWeapons],
                     lambda: display(Player1, ["Would you like to pick up the daggers or the hammer?\n"
                                               "Daggers:            Hammer:\n"
-                                              "dmg. + 1            dmg + 5\n"
+                                              "dmg. + 1            dmg. + 5\n"
                                               "sta. cost - 2       sta. cost + 2\n"
-                                              "spd. + 4            spd - 4"],
+                                              "spd. + 4            spd. - 4"],
                                     [[lambda: daggers.equip(Player1), "Daggers"], [Core.__pass, "Neither"],
                                      [lambda: hammer.equip(Player1), "Hammer"]]),
                     True, False, [], True),
