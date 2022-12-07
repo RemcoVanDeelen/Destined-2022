@@ -1,4 +1,4 @@
-# Destined-2022 GUIDE
+# Destined-2022 GUIDE!
 
 This guide is split up in 4 sections:
 - [A simple guide,](#a-simple-guide)
@@ -6,8 +6,8 @@ This guide is split up in 4 sections:
 - [The world](#the-world),
 - [Spells and items](#spells-and-items),
 
-The simple guide explains the basics of gameplay while  
-the others provide a more in-depth explanation of their subjects.
+The simple guide explains the basics of game-play, while  
+the others provide a more in-depth explanation of their subjects.  
 
 
 ---
@@ -15,72 +15,75 @@ _A simple guide._
 -
 Upon launching the game, you are confronted with the main menu.  
 Here you can choose to start playing by loading one of three save-files.  
-Alternatively you can change some settings or exit the game.
+Alternatively you can change some settings or exit the game.  
 
-The player can return to the main menu at any time in the escape menu (using the ESC key by default).
-Note that returning to the main menu without saving first can cause loss of progress.
+The player can return to the main menu at any time in the escape menu (using the   
+ESC key by default). Note that returning to the main menu without saving first can   
+cause loss of progress.
 
-#### Save-files
+#### Save-files  
 When choosing to load a file, you can choose between 3 files.  
 File 1 and 2 are identical on first launch.  
-File 3 can be seen as a _sandbox mode_ as it has absurdly high stats and movement speed.  
+File 3 can be seen as a _sandbox mode_ as it has absurdly high statistics and movement speed.  
 
-When playing on any of these files, the player can save by either hitting the _SAVE_ button  
-in the after pressing escape or by interacting with one of two checkpoints.  
-Saving to a file replaces the data previously written to that file.
+When playing on any of these files, the player can save by either hitting the _SAVE_ button   
+after pressing escape or by interacting with one of two checkpoints.  
+Saving to a file replaces the data previously written to that file.  
 
 #### Movement
-Once a file has been loaded, the player starts in the bottom left corner of the screen and  
-can explore the starting room by using the movement controls (WASD by default).  
-Some tiles can be interacted with by pressing the interaction key (R by default).
+Once a file has been loaded, the player starts in the bottom left corner of the screen (or where  
+they last saved) and can explore the room by using the movement controls (WASD by default).    
+Some tiles can be interacted with by pressing the interaction key (R by default).  
 In the starting room most intractable tiles are animated with a sparkle effect,  
 but interacting with the training dummy starts an example battle.  
-When ready the player can move on to the next rooms by entering the gradient tiles.
+When ready, the player can move on to the next rooms by entering the gradient tiles.  
 
 #### Battle
 Battles are started by interacting with the dummy or randomly while walking through the field.  
-Battles are turn-based. A battle ends when either the player or all enemies run out of health (hp).
-During the player's turn you get the option to fight using stamina, use magic, or some basic actions.  
+Battles are turn-based. A battle ends when either the player or all enemies run out of health (HP).  
+During the player's turn you get the option to fight using stamina, use magic, use items or some   
+basic actions.  
 
-When a battle ends the player is rewarded with 'soul' for each enemy they defeated.  
-Soul functions like Exp in some other games, when enough soul is collected the player gains some stats.
+When a battle ends, the player is rewarded with 'soul' for each enemy they defeated.  
+Soul functions like Exp in some other games, when enough soul is collected the player gains an   
+increase in some statistics.  
 
 When all enemies are defeated, the player also earns some gold which can be used to buy items.
 
-#### Stores and Stats
+#### Stores and Statistics  
 Gold earned in battles can be spent on items in stores.  
-Stores are found around the world and open a menu when interacted with.  
+Stores are found around the world and open a menu, when interacted with.  
 In stores the player can buy and sell items in exchange for gold.  
-Only 12 items can be held at a time.
+Only 12 items can be held at a time.  
 
-The player can see what items they currently have by pressing the open stats key (I by default) when walking  
-around. In this menu many other stats can be seen as well, like speed and gold.  
+The player can see what items they currently have by pressing the open statistics key (I by default) when walking  
+around. In this menu many other statistics can be seen as well, like speed and gold.  
 
 #### Spells
 The player can unlock spells by interacting with some tiles.  
 The player has 5 spell slots and can swap what spells are currently unlocked.   
 Some spells provide passive effect and can not be used in combat, others are provide more  
-noticeable active effects.
+noticeable active effects.  
 
 ---
 _Combat_
 -
 This is a more detailed explanation on how combat works.  
-The turn order for each battle is decided by the speed stat of the combatants.  
-To see the stats of the enemies, press the image and keep the cursor hovering within its  
+The turn order for each battle is decided by the speed statistic of the combatants.  
+To see the statistics of the enemies, press their image and keep the cursor hovering within its  
 boundary. In this info card, a small description  of the enemy is also provided.  
 
 -\
 Walking on a tile in the field has a 1/12 chance to start a battle.  
 The player then has a 2/7 chance to face a normal foe and a 1/7 chance to face a powerful foe.  
-There is a 4/10 chance to add another enemy using the same chances as before except the enemy that  
-was already selected has a 1/7 less chance to be selected again.
+There is a 4/10 chance to add another enemy using the same odds as before, except the enemy that  
+was already selected has a 1/7 less chance to be selected again.  
 This has a 3/10 chance to repeat once more resulting in a fight against 1~3 random enemies.  
 
 -\
-Each unique enemy has a different range of moves:
+Each unique enemy has a different range of moves:  
 
-- Offencive foe:  
+- Offensive foe:  
 
       - Heavy attack, 
         [Deals medium damage, cannot be used after a Double attack or a Heavy attack]
@@ -91,10 +94,10 @@ Each unique enemy has a different range of moves:
       - Light attack, 
         [Deals small damage]
 
-- Defencive foe:
+- Defensive foe:
 
       - Defend, 
-        [provides the 'defening' status effect for one turn, cannot be used after a Defend]
+        [provides the 'defending' status effect for one turn, cannot be used after a Defend]
 
       - Self heal, 
         [Heals a small portion of health, cannot be used after a Defend, can only  
@@ -109,10 +112,10 @@ Each unique enemy has a different range of moves:
         [Deals small damage]
 
       - Buff health, 
-        [Increases the max health of an ally by 10, and heal it 5 health, cannot be used twice]
+        [Increases the maximum health of an ally by 10, and heal it 5 health, cannot be used twice]
 
       - Heal any, 
-        [Heals a medium portion of any ally's health]
+        [Heals a medium portion of any allies health]
 
       - Enchant weapon, 
         [provides the 'enchanted weapon' status effect to an ally or increases its duration]
@@ -120,7 +123,7 @@ Each unique enemy has a different range of moves:
 - Powerful foe:  
 
       - Defend, 
-        [provides the 'defening' status effect for one turn, cannot be used after a Defend]
+        [provides the 'defending' status effect for one turn, cannot be used after a Defend]
 
       - Heavy attack, 
         [Deals medium damage, cannot be used after a Double attack]
@@ -132,33 +135,35 @@ Each unique enemy has a different range of moves:
         [Heals a small portion of health, cannot be used after a Self heal, can only  
          be used when not at full health]
 -\
-During the player's turn you can choose to fight.
+During the player's turn you can choose to fight.  
 Fighting gives you the option to either perform a _Light_ or a _Heavy_ attack.  
-These attack cost stamina and deal damage based on the _Damage_ stat.  
+These attack cost stamina and deal damage based on the _Damage_ statistic.  
 The _Light_ attack costs less stamina and deals less damage than the _Heavy_ attack.  
 Most damage increasing status effects only have effect on these attacks and not magic.
+##### <Magic and Items>
 
 -\
 If the player does not choose to fight, they can choose to use _Magic_ instead.  
 Magic does not cost stamina (except for one case), but has a cool-down.  
-The cooldown prevents a spell to be used for a varying amount of turns after use.  
-Each spell has a unique cooldown and a unique effect. Some spells are _passive_, meaning  
+The cool-down prevents a spell to be used for a varying amount of turns after use.  
+Each spell has a unique cool-down and a unique effect. Some spells are _passive_, meaning  
 they cannot be used in combat but provide continuous effects without a cool-down.  
 
 -\
 The player can also choose to use an item.  
-Items are single-use only and have a cooldown shared with all others of its type.  
+Items are single-use only and have a cool-down shared with all others of its type.  
 Items provide direct effects on use like healing the users health or stamina or even increasing  
 their maximum health.  
 
-Their limited use makes items quite valuable.
+Their limited use makes items quite valuable.  
 
 -\
-Lastly during their turn the player may use an action.
-There are two possible actions you can use:  
+Lastly during their turn the player may choose to use an action.  
+There are two possible actions you can use:    
 
 	- Defend,
-	 [provides the 'defending' status effect for one turn]
+	 [provides the 'defending' status effect for one turn, decreasing the damage 
+      taken by all hits during its effect]
 
 	- Run,
 	 [Ends the battle, the player still gains the soul for each defeated enemy, but  
@@ -166,7 +171,13 @@ There are two possible actions you can use:
 
 -\
 When the player does not use any stamina in their turn, they regain some.  
-The amount gained varies per action that they did use (most actions return 3 stamina).
+The amount gained varies per action that they did use (most actions return 3 stamina).  
+
+-\
+When the player loses all their health during battle, the battle ends immediately.  
+The player then returns to the last checkpoint that they saved at.  
+They return to maximum health, but lose half their gold. The enemies that were  
+defeated still grant their soul, but no gold is earned. Simular to the _run_ action.
 
 ---
 _The world_
@@ -197,7 +208,7 @@ _The world_
 **Room_1**
 	
 	- Description:
-	  |Small town with small training setup, and stalls for items and spells.
+	  |Small town with small training set-up, and stalls for items and spells.
 	
 	- Contains:
 	  |Training Dummy,
@@ -207,7 +218,7 @@ _The world_
 	  |Short Sword,
 	 
  	  |3 Store stalls for spell slots 1-3,
-	  |1 Store stall for basic items,
+	  |1 Store table for basic items,
       
       |Checkpoint (Unique tile where player spawns).
 
@@ -225,7 +236,7 @@ _The world_
 **Room_3**
 
 	- Description:
-	  |Bright forest with path splitting north and east, small campsite with
+	  |Bright forest with path splitting north and east, small camp-site with
 	  |checkpoint. The path leads to hut and forest wall.
 	
 	- Contains:
@@ -247,7 +258,7 @@ _The world_
 ---
 _Spells and items_
 -
-Spells and items have been explained before. This is a more in-depth explanation of each  
+Spells and items have been explained [before](#magic-and-items). This is a more in-depth explanation of each  
 spell and item when used or equipped.  
 [**\[ press here to skip to spells \]**](#spells-)
 
@@ -271,16 +282,16 @@ spell and item when used or equipped.
 - Stamina potion:  
 
       Regains 8 stamina,
-      Cooldown: 3
+      Cool-down: 3
 
 - Large stamina potion:  
 
       Regains 15 stamina,
-      Cooldown: 3
+      Cool-down: 3
 
-- Staminaless potion:  
+- Stamina-less potion:  
 
-      Grants 'staminaless' status effect to user, decreasing Fight stamina costs by 2,
+      Grants 'stamina-less' status effect to user, decreasing Fight stamina costs by 2,
       If the user already has the effect, increases its duration.
       Cool-down: 2
 
@@ -311,7 +322,7 @@ spell and item when used or equipped.
 
        Increases effect of the next spell used. 
        {Grants these effects}
-       Cool-down: 3 (Starts after next spel is used)
+       Cool-down: 3 (Starts after next spell is used)
 
  - Regenerate
 
@@ -340,7 +351,7 @@ spell and item when used or equipped.
 
       Gives a single target the 'stasis' status effect. Stopping their next 2 turns.
       Cannot target an enemy that already has the effect.
-      {Decreases cooldown by 2}
+      {Decreases cool-down by 2}
       Cool-down: 5
 
 - Weaken
@@ -348,12 +359,12 @@ spell and item when used or equipped.
       Deals minor damage to single target and grants them the 'weakened' status effect.
       Increasing any damage taken by them.
       If the target already has the effect, increases its duration.
-      {Increases damage dealt and decreases cooldown by 1}
+      {Increases damage dealt and decreases cool-down by 1}
       Cool-down: 3
 
 - Agility \[passive]
 
-      Increases the players 'speed' stat by 4 while equipped.
+      Increases the players 'speed' statistic by 4 while equipped.
       Cannot be used in combat.
       Cool-down: N/A
 
@@ -363,14 +374,14 @@ spell and item when used or equipped.
 - Fireball
 
       Deals minor damage to single target.
-      {Decreases cooldown by 1 and grants 'burning' status effect to target. -} 
+      {Decreases cool-down by 1 and grants 'burning' status effect to target. -} 
       {- Dealing minor damage to them each of their turns}
       Cool-down: 3
 
 - Whirlwind
 
       Deals minor damage to all enemies.
-      {Increses damage dealt}
+      {Increases damage dealt}
       Cool-down: 3
 
 - Enchant weapon
@@ -382,7 +393,7 @@ spell and item when used or equipped.
 
 - Stamina \[passive]
 
-      Increases the players maximum stamina stat by 5 while equipped.
+      Increases the players maximum stamina statistic by 5 while equipped.
       Cannot be used in combat.
       Cool-down: N/A
 
@@ -394,8 +405,8 @@ spell and item when used or equipped.
       Grants 'venom' effect to single target.
       Dealing minor damage at the end of each of their turns.
       This effect may stack.
-      {Provides stronger effect, now dealing damage at the end of everyones turns. -}
-      {- Also increases cooldown by 1}
+      {Provides stronger effect, now dealing damage at the end of everyone’s turns. -}
+      {- Also increases cool-down by 1}
       Cool-down: 3
 
 - Recover
@@ -424,7 +435,7 @@ spell and item when used or equipped.
 - Heal
 
       Heals 50% of the users health. Cannot heal more than 25.
-      {Heals 75% insted, with a limit of 38}
+      {Heals 75% instead, with a limit of 38}
       Cool-down: 5
 
 - Chaotic strike

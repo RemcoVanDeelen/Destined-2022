@@ -14,5 +14,5 @@ It is consists of:
 To run the game you must run ***main.py***.
 
 For a basic introduction to the games mechanics and
-an in-depth explanation of the more complex systems, see _Guide.md_.
+an in-depth explanation of the more complex systems, see _Guide.md_.  
 It is recommended to read the simple guide provided in Guide.md.
